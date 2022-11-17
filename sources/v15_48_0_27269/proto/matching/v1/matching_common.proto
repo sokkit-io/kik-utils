@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package common.matching.v1;
+
+import "protobuf_validation.proto";
+import "common_model.proto";
+import "common/v1/model.proto";
+
+option objc_class_prefix = "MAT";
+option java_generate_equals_and_hash = true;
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/matching/v1;matching";
+option java_package = "com.kik.matching.model";
+
+message AnonMatchingSessionKey {
+    oneof chat_session_id {
+        XiUuid session_id = 1;
+        common.v1.XiAliasJid chat_partner_alias = 2;
+    }
+}
+
+enum ChatSessionState {
+    CHAT_ACTIVE = 0;
+    EXPIRED = 2;
+    UPGRADED = 3;
+}

@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+package mobile.messaging.v2;
+
+import "protobuf_validation.proto";
+import "messaging/v2/model.proto";
+import "common/v2/model.proto";
+
+option objc_class_prefix = "KPBMobileMessagingV2";
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/messaging/v2;messaging";
+option java_package = "com.kik.gen.messaging.v2";
+
+service Messaging {
+    rpc OpenMessageStream(OpenMessageStreamRequest) returns (stream Messages);
+    rpc OpenPointerStream(OpenPointerStreamRequest) returns (stream Pointers);
+    rpc SendMessage(SendMessageRequest) returns (SendMessageResponse);
+    rpc UpdatePointers(UpdatePointersRequest) returns (UpdatePointersResponse);
+    rpc NotifyIsTyping(NotifyIsTypingRequest) returns (NotifyIsTypingResponse);
+}
+
+message OpenMessageStreamRequest {
+    
+}
+
+message Messages {
+    repeated common.messaging.v2.Message messages = 1;
+}
+
+message OpenPointerStreamRequest {
+    
+}
+
+message Pointers {
+    repeated common.messaging.v2.Pointer pointers = 1;
+}
+
+message SendMessageRequest {
+    common.messaging.v2.Message message = 1;
+}
+
+message SendMessageResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        PUBLIC_GROUP_USER_GENERATED_CONTENT_DENIED = 200;
+    }
+    
+    common.messaging.v2.Message.Id message_id = 2;
+}
+
+message UpdatePointersRequest {
+    repeated common.messaging.v2.Pointer pointers = 1;
+}
+
+message UpdatePointersResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+    }
+}
+
+message NotifyIsTypingRequest {
+    common.v2.ChatId chat_id = 1;
+    common.v2.PersonaId sender = 2;
+    bool is_typing = 5;
+}
+
+message NotifyIsTypingResponse {
+    
+}

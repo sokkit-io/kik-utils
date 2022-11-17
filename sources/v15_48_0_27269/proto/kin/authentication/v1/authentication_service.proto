@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package mobile.kin.authentication.v1;
+
+import "protobuf_validation.proto";
+import "common_model.proto";
+import "common/v1/model.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/kin/authentication/v1;authentication";
+option java_package = "com.kik.kin.authentication.rpc";
+
+service Authentication {
+    rpc GenerateUserJwt(GenerateUserJwtRequest) returns (GenerateUserJwtResponse);
+}
+
+message GenerateUserJwtRequest {
+    common.XiBareUserJid user_jid = 1;
+}
+
+message GenerateUserJwtResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        REJECTED = 1;
+    }
+    
+    UserJwtRejectionReason rejection_reason = 2;
+    common.v1.XiJWT user_jwt = 3;
+}
+
+message UserJwtRejectionReason {
+    Code code = 1;
+    enum Code {
+        UNKNOWN = 0;
+        REJECTED_USER_NOT_AUTHORIZED = 1;
+    }
+}

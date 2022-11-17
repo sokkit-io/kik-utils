@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package common.accounts.v2;
+
+import "kik_options.proto";
+import "protobuf_validation.proto";
+
+option objc_class_prefix = "KPBCommonAccountsV2";
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/accounts/v2;accounts";
+option java_package = "com.kik.gen.accounts.v2";
+
+enum OneTimeUseFlag {
+    PUBLIC_GROUPS_TUTORIAL_SHOWN = 0;
+    NEW_CHATS_READ_RECEIPTS_TUTORIAL_SHOWN = 1;
+    CHATS_RESTORED_TUTORIAL_SHOWN = 2;
+    PULL_TO_SEARCH_TUTORIAL_SHOWN = 3;
+    PUBLIC_GROUPS_UGC_DIALOGUE_SHOWN = 4;
+    PROFILE_FRAMES_PHOTO_PREVIEW_TOOLTIP_SHOWN = 5;
+    EMOJI_STATUS_SETTINGS_TOOLTIP_SHOWN = 6;
+    SUGGESTED_RESPONSE_TOOLTIP_SHOWN = 7;
+    NEW_CHATS_PUBLIC_GROUP_DIRECT_MESSAGES_TOOLTIP_SHOWN = 8;
+    MESSAGE_LIST_PUBLIC_GROUP_DIRECT_MESSAGES_TOOLTIP_SHOWN = 9;
+    PRIVACY_CONTROL_PUBLIC_GROUP_DIRECT_MESSAGES_MODAL_SHOWN = 10;
+    PRIVACY_CONTROL_PUBLIC_GROUP_DIRECT_MESSAGES_TOOLTIP_SHOWN = 11;
+    THEME_TOOLTIP_SHOWN = 12;
+    KIN_MARKETPLACE_SHOWN = 13;
+    BOT_IN_GROUP_TOOLTIP_SHOWN = 14;
+    FIRST_TIME_TIPPING_SCREEN_SHOWN = 15;
+}

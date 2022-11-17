@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package common.kin.payment.v1;
+
+import "protobuf_validation.proto";
+import "common_model.proto";
+import "common/v2/model.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/kin/payment/v1;payment";
+option java_package = "com.kik.kin.payment.model";
+
+message PaymentInfo {
+    Feature feature = 1;
+    FeatureData feature_data = 2;
+    KinAmount kin_amount = 3;
+}
+
+message FeatureData {
+    oneof kind {
+        PublicGroupAdminTipData public_group_admin_tip_data = 1;
+        PublicGroupMessageTipData public_group_message_tip_data = 2;
+    }
+}
+
+message PublicGroupAdminTipData {
+    XiGroupJid group = 1;
+}
+
+message PublicGroupMessageTipData {
+    XiGroupJid group_jid = 1;
+    XiUuid message_id = 2;
+    
+    MessageType message_type = 3;
+    enum MessageType {
+        UNKNOWN = 0;
+        TEXT = 1;
+        WEB_PAGE = 2;
+        IMAGE_GALLERY = 3;
+        IMAGE_CAMERA = 4;
+        GIF = 5;
+        VIDEO_GALLERY = 6;
+        VIDEO_CAMERA = 7;
+    }
+}
+
+message KinAmount {
+    double amount_double = 1 [deprecated = true];
+    v2.BigDecimal amount = 2;
+}
+
+enum Feature {
+    UNKNOWN = 0;
+    PUBLIC_GROUP_ADMIN_TIP = 1;
+    PUBLIC_GROUP_MESSAGE_TIP = 2;
+}
+
+enum TransactionType {
+    UNKNOWN_TYPE = 0;
+    EARN = 1;
+    SPEND = 2;
+    PAY_TO_USER = 3;
+}

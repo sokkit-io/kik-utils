@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package mobile.antispam.safetynet.v1;
+
+import "common_rpc.proto";
+import "protobuf_validation.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/antispam/safetynet/v1;safetynet";
+option java_package = "com.kik.antispam.safetynet.rpc";
+
+service SafetyNet {
+    rpc GetNonce(common.VoidRequest) returns (GetNonceResponse);
+    rpc VerifyAttestationResult(VerifyAttestationResultRequest) returns (VerifyAttestationResultResponse);
+}
+
+message GetNonceResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+    }
+    
+    string nonce = 2;
+}
+
+message VerifyAttestationResultRequest {
+    string jws = 1;
+}
+
+message VerifyAttestationResultResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        INVALID_NONCE = 1;
+        MALFORMED_REQUEST = 2;
+    }
+}

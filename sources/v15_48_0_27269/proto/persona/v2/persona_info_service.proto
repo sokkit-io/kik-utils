@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package mobile.persona.v2;
+
+import "protobuf_validation.proto";
+import "common_rpc.proto";
+import "common/v2/model.proto";
+import "persona/v2/persona_common.proto";
+
+option objc_class_prefix = "KPBMobilePersonaV2";
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/persona/v2;persona";
+option java_package = "com.kik.gen.persona.v2";
+
+service PersonaInfo {
+    rpc GetPersonaShort(GetPersonaShortRequest) returns (GetPersonaShortResponse);
+    rpc GetPersonaFull(GetPersonaFullRequest) returns (GetPersonaFullResponse);
+    rpc GetPersonaFullByUsername(GetPersonaFullByUsernameRequest) returns (GetPersonaFullByUsernameResponse);
+    rpc GetSelectableInterests(common.VoidRequest) returns (GetSelectableInterestsResponse);
+}
+
+message GetPersonaShortRequest {
+    repeated common.v2.PersonaId persona_ids = 1;
+}
+
+message GetPersonaShortResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+    }
+    
+    repeated common.persona.v2.PersonaShort personas = 2;
+    repeated common.v2.PersonaId not_found_ids = 3;
+    repeated common.v2.PersonaId failed_ids = 4;
+}
+
+message GetPersonaFullRequest {
+    repeated common.v2.PersonaId persona_ids = 1;
+}
+
+message GetPersonaFullResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+    }
+    
+    repeated common.persona.v2.PersonaFull personas = 2;
+    repeated common.v2.PersonaId not_found_ids = 3;
+    repeated common.v2.PersonaId failed_ids = 4;
+}
+
+message GetPersonaFullByUsernameRequest {
+    common.v2.Username username = 1;
+}
+
+message GetPersonaFullByUsernameResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        NOT_FOUND = 1;
+    }
+    
+    common.persona.v2.PersonaFull persona = 2;
+}
+
+message GetSelectableInterestsResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+    }
+    
+    repeated common.persona.v2.Interests.InterestItem interests = 2;
+    uint32 max_user_interests = 3;
+}

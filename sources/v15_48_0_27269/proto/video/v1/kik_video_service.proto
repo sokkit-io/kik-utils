@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package mobile.video.v1;
+
+import "protobuf_validation.proto";
+import "common_rpc.proto";
+import "video/v1/video_common.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/video/v1;video";
+option java_package = "com.kik.video.mobile";
+
+service KikVideo {
+    rpc BatchedGetConvoState(BatchedGetConvoStateRequest) returns (BatchedGetConvoStateResponse);
+    rpc JoinConvoConference(JoinConvoConferenceRequest) returns (JoinConvoConferenceResponse);
+    rpc OnLeaveConvoConference(LeaveConvoConferenceNotification) returns (common.VoidResponse);
+}
+
+message BatchedGetConvoStateRequest {
+    repeated common.video.v1.ConvoId convo_ids = 1;
+}
+
+message BatchedGetConvoStateResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+    }
+    
+    repeated common.video.v1.ConvoVideoState latest_states = 2;
+}
+
+message JoinConvoConferenceRequest {
+    common.video.v1.ConvoId convo_id = 1;
+    
+    reserved 2;
+}
+
+message JoinConvoConferenceResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        FULL = 1;
+        NOT_ALLOWED = 2;
+    }
+    
+    common.video.v1.ConvoVideoState latest_state = 2;
+    common.video.v1.ConferenceConnectionInfo connection_info = 3;
+    common.video.v1.MediaServerConnectionToken connection_token = 4;
+}
+
+message LeaveConvoConferenceNotification {
+    common.video.v1.ConvoId convo_id = 1;
+    common.video.v1.MediaServerConnectionToken connection_token = 4;
+    
+    reserved 2, 3;
+}

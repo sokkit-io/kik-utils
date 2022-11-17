@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package common;
+
+import "protobuf_validation.proto";
+import "kik_options.proto";
+
+option java_generate_equals_and_hash = true;
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go;common";
+option java_multiple_files = true;
+option java_outer_classname = "CommonModelProto";
+option java_package = "com.kik.ximodel";
+
+message XiUuid {
+    sfixed64 msb = 1;
+    sfixed64 lsb = 2;
+}
+
+message XiBareUserJid {
+    string local_part = 1;
+}
+
+message XiUsername {
+    string username = 1;
+}
+
+message XiUid {
+    uint64 uid = 1;
+}
+
+message XiDeviceId {
+    DevicePrefix prefix = 1;
+    enum DevicePrefix {
+        NONE = 0;
+        CIP = 1;
+        CAN = 2;
+        CTS = 17;
+        CBT = 18;
+        UNRECOGNIZED_DEVICE = 10;
+        CWP = 11;
+        CSY = 13;
+        CME = 15;
+    }
+    
+    string id = 2;
+}
+
+message XiGid {
+    uint64 gid = 1;
+}
+
+message XiGroupJid {
+    string local_part = 1;
+}
+
+message XiUidOrGid {
+    oneof uid_or_gid {
+        XiUid uid = 1;
+        XiGid gid = 2;
+    }
+}
+
+message XiBareUserOrGroupJid {
+    oneof user_or_group_jid {
+        XiBareUserJid user_jid = 1;
+        XiGroupJid group_jid = 2;
+    }
+}
+
+message XiClientVersion {
+    uint32 major = 1;
+    uint32 minor = 2;
+    uint32 bugfix = 3;
+    string build = 4;
+    string dev_build = 5;
+}
+
+message XiLocale {
+    string locale = 1;
+}

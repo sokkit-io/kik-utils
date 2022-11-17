@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package common.messagepath.v1;
+
+import "protobuf_validation.proto";
+import "messagepath/v1/core_message_options.proto";
+import "messagepath/v1/visibility_rules.proto";
+import "messagepath/v1/mentions.proto";
+import "messagepath/v1/keyboards.proto";
+import "messagepath/v1/widgets.proto";
+import "messagepath/v1/adaptive_cards.proto";
+import "messagepath/v1/text_markdown.proto";
+import "messagepath/v1/carousels.proto";
+import "messagepath/v1/chat_theme.proto";
+import "messagepath/v1/feature_payment.proto";
+import "messagepath/v1/webrtc_video.proto";
+
+option objc_class_prefix = "MPTH";
+option java_generate_equals_and_hash = true;
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/messagepath/v1;messagepath";
+option java_multiple_files = true;
+option java_outer_classname = "CoreMessageProto";
+option java_package = "com.kik.messagepath.model";
+
+message CoreMessage {
+    CarouselMessageAttachment carousel_message_attachment = 515;
+    VisibilityRulesAttachment visibility_rules_attachment = 1000;
+    MentionReplyAttachment mention_reply_attachment = 1002;
+    KeyboardAttachment keyboard_attachment = 1003;
+    KeyboardReplyAttachment keyboard_reply_attachment = 1004;
+    WidgetAttachment widget_attachment = 1005;
+    AdaptiveCardAttachment adaptive_card_attachment = 1006;
+    TextMarkdownAttachment text_markdown_attachment = 1007;
+    ChatThemeAttachment chat_theme_attachment = 1008;
+    TransactionDetailsAttachment transaction_details_attachment = 1009;
+    VideoConferenceUpdateAttachment video_conference_update_attachment = 1010;
+}

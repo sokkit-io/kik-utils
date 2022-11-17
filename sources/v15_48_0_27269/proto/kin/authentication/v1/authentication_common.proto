@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package common.kin.authentication.v1;
+
+import "protobuf_validation.proto";
+import "common_model.proto";
+import "common/v1/model.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/kin/authentication/v1;authentication";
+option java_package = "com.kik.kin.authentication.model";
+
+message OfferId {
+    oneof value {
+        XiUuid product_id = 1;
+        string feature_offer_id = 2;
+    }
+}
+
+message OfferJwt {
+    OfferId id = 1;
+    common.v1.XiJWT jwt = 2;
+}

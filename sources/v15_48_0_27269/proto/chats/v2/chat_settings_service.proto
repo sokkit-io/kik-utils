@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package mobile.chats.v2;
+
+import "protobuf_validation.proto";
+import "google/protobuf/timestamp.proto";
+import "common/v2/model.proto";
+import "chats/v2/model.proto";
+
+option objc_class_prefix = "KPBMobileChatsV2";
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/chats/v2;chats";
+option java_package = "com.kik.gen.chats.v2";
+
+service ChatSettings {
+    rpc MuteChat(MuteChatRequest) returns (MuteChatResponse);
+    rpc UnmuteChat(UnmuteChatRequest) returns (UnmuteChatResponse);
+    rpc SetChatCategory(SetChatCategoryRequest) returns (SetChatCategoryResponse);
+    rpc SetChatTheme(SetChatThemeRequest) returns (SetChatThemeResponse);
+}
+
+message MuteChatRequest {
+    common.v2.ChatId id = 1;
+    google.protobuf.Timestamp mute_expiry = 2;
+}
+
+message MuteChatResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+    }
+}
+
+message UnmuteChatRequest {
+    common.v2.ChatId id = 1;
+}
+
+message UnmuteChatResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+    }
+}
+
+message SetChatCategoryRequest {
+    common.v2.ChatId chat_id = 1;
+    common.chats.v2.ChatCategory new_category = 2;
+}
+
+message SetChatCategoryResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+    }
+}
+
+message SetChatThemeRequest {
+    common.v2.ChatId chat_id = 1;
+    common.chats.v2.ChatThemeId chat_theme_id = 2;
+}
+
+message SetChatThemeResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        NOT_PERMITTED = 1;
+    }
+}

@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package common.augmentum.v1;
+
+import "google/protobuf/timestamp.proto";
+import "common_model.proto";
+import "protobuf_validation.proto";
+
+option objc_class_prefix = "AUG";
+option java_generate_equals_and_hash = true;
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/augmentum/v1;augmentum";
+option java_multiple_files = true;
+option java_outer_classname = "AugmentumEventProto";
+option java_package = "com.kik.augmentum.model";
+
+message AugmentumEvent {
+    google.protobuf.Timestamp timestamp = 1;
+    
+    EventId event = 2;
+    message EventId {
+        string origin = 1;
+        string namespace = 2;
+        string name = 5;
+    }
+    
+    XiUuid instance_id = 3;
+    XiBareUserJid user_jid = 4;
+    string device_id = 5;
+    XiUuid packet_id = 6;
+    XiGroupJid group_jid = 7;
+    string username = 20;
+    XiUuid content_id = 21;
+    string oauthed_email = 22;
+    string client_version = 8;
+    XiDeviceId.DevicePrefix device_prefix = 9;
+    AugStruct common_data = 10;
+    AugStruct event_data = 11;
+    
+    AugmentumAttributes augmentum = 12;
+    message AugmentumAttributes {
+        google.protobuf.Timestamp ingestion_time = 1;
+        google.protobuf.Timestamp injestion_time = 2 [deprecated = true];
+        string source_ip = 5;
+    }
+}
+
+message AugStruct {
+    map<string, AugValue> fields = 1;
+}
+
+message AugValue {
+    oneof kind {
+        AugNullValue null_value = 1;
+        double number_value = 2;
+        string string_value = 3;
+        bool bool_value = 4;
+        AugStruct struct_value = 5;
+        AugListValue list_value = 6;
+    }
+}
+
+message AugListValue {
+    repeated AugValue values = 1;
+}
+
+enum AugNullValue {
+    NULL_VALUE = 0;
+}

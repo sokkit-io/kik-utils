@@ -1,0 +1,378 @@
+syntax = "proto3";
+
+package mobile.groups.v2;
+
+import "protobuf_validation.proto";
+import "common/v2/model.proto";
+import "chats/v2/chat_info.proto";
+import "chats/v2/model.proto";
+import "groups/v2/groups_common.proto";
+import "google/protobuf/duration.proto";
+
+option objc_class_prefix = "KPBMobileGroupsV2";
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/groups/v2;groups";
+option java_package = "com.kik.gen.groups.v2";
+
+service Group {
+    rpc GetGroupInfoShort(GetGroupInfoShortRequest) returns (GetGroupInfoShortResponse);
+    rpc GetGroupInfoFull(GetGroupInfoFullRequest) returns (GetGroupInfoFullResponse);
+    rpc GetBannedGroupMembersStream(GetBannedGroupMembersStreamRequest) returns (stream GetBannedGroupMembersStreamResponse);
+    rpc CreateGroup(CreateGroupRequest) returns (CreateGroupResponse);
+    rpc LeaveGroup(LeaveGroupRequest) returns (LeaveGroupResponse);
+    rpc AddToGroup(AddToGroupRequest) returns (AddToGroupResponse);
+    rpc RemoveFromGroup(RemoveFromGroupRequest) returns (RemoveFromGroupResponse);
+    rpc SetGroupName(SetGroupNameRequest) returns (SetGroupNameResponse);
+    rpc GetGroupInfoByInviteCode(GetGroupInfoByInviteCodeRequest) returns (GetGroupInfoByInviteCodeResponse);
+    rpc GetGroupInfoByJoinToken(GetGroupInfoByJoinTokenRequest) returns (GetGroupInfoByJoinTokenResponse);
+    rpc JoinPublicGroup(JoinPublicGroupRequest) returns (JoinPublicGroupResponse);
+    rpc JoinGroupByInviteCode(JoinGroupByInviteCodeRequest) returns (JoinGroupByInviteCodeResponse);
+    rpc CreateInviteCode(CreateInviteCodeRequest) returns (CreateInviteCodeResponse);
+    rpc BanFromGroup(BanFromGroupRequest) returns (BanFromGroupResponse);
+    rpc UnbanFromGroup(UnbanFromGroupRequest) returns (UnbanFromGroupResponse);
+    rpc PromoteMember(PromoteMemberRequest) returns (PromoteMemberResponse);
+    rpc DemoteMember(DemoteMemberRequest) returns (DemoteMemberResponse);
+    rpc SetIsDirectMessagingBlocked(SetIsDirectMessagingBlockedRequest) returns (SetIsDirectMessagingBlockedResponse);
+    rpc SetChatThemeLock(SetChatThemeLockRequest) returns (SetChatThemeLockResponse);
+}
+
+message FrequencyErrorDetails {
+    uint32 frequency_limit = 4;
+    google.protobuf.Duration frequency_limit_duration = 5;
+}
+
+message GetGroupInfoShortRequest {
+    common.v2.ChatId chat_id = 1;
+    common.v2.PersonaId requestor = 2;
+}
+
+message GetGroupInfoShortResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        NOT_FOUND = 1;
+    }
+    
+    common.chats.v2.GroupInfoShort info = 2;
+}
+
+message GetGroupInfoFullRequest {
+    common.v2.ChatId chat_id = 1;
+    common.v2.PersonaId requestor = 2;
+}
+
+message GetGroupInfoFullResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        NOT_FOUND = 1;
+    }
+    
+    common.chats.v2.GroupInfoFull info = 2;
+}
+
+message GetBannedGroupMembersStreamRequest {
+    common.v2.ChatId chat_id = 1;
+    common.v2.PersonaId requestor = 2;
+}
+
+message GetBannedGroupMembersStreamResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        NOT_FOUND = 1;
+    }
+    
+    repeated BannedGroupMember banned_group_members = 2;
+}
+
+message BannedGroupMember {
+    common.v2.PersonaId persona_id = 1;
+}
+
+message CreateGroupRequest {
+    common.v2.PersonaId creator = 1;
+    repeated common.v2.PersonaId initial_members = 2;
+    common.groups.v2.GroupName group_name = 3;
+    common.groups.v2.PublicGroupFields public_group_fields = 4;
+    common.v2.Uuid request_id = 5;
+}
+
+message CreateGroupResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        POLICY_RESTRICTION = 2;
+        HASHTAG_NOT_UNIQUE = 3;
+        NOT_PERMITTED = 4;
+        BAN_FREQUENCY_THRESHOLD = 5;
+        CREATE_FREQUENCY_THRESHOLD = 6;
+        BELOW_MINIMUM_MEMBERS = 7;
+        BAD_RELATION_STATUS = 8;
+    }
+    
+    common.chats.v2.Chat chat = 2;
+    
+    repeated RestrictedField restricted_fields = 3;
+    enum RestrictedField {
+        UNSPECIFIED = 0;
+        GROUP_NAME = 1;
+        GROUP_HASHTAG = 2;
+    }
+    
+    FrequencyErrorDetails create_frequency_error_details = 4;
+}
+
+message LeaveGroupRequest {
+    common.v2.ChatId chat_id = 1;
+    common.v2.PersonaId leaver = 2;
+}
+
+message LeaveGroupResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+    }
+}
+
+message AddToGroupRequest {
+    common.v2.ChatId chat_id = 1;
+    common.v2.PersonaId adder = 2;
+    repeated common.v2.PersonaId new_members = 3;
+}
+
+message AddToGroupResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        NOT_PERMITTED = 1;
+        BAD_RELATION_STATUS = 2;
+    }
+    
+    repeated FailureDetails failure_details = 2;
+    message FailureDetails {
+        common.v2.PersonaId persona_id = 1;
+        
+        Reason reason = 2;
+        enum Reason {
+            UNKNOWN = 0;
+            BANNED = 1;
+            GROUP_FULL = 2;
+            NOT_PERMITTED = 3;
+            BOT_LIMIT_REACHED = 4;
+        }
+    }
+}
+
+message RemoveFromGroupRequest {
+    common.v2.ChatId chat_id = 1;
+    common.v2.PersonaId remover = 2;
+    repeated common.v2.PersonaId removees = 3;
+}
+
+message RemoveFromGroupResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        NOT_PERMITTED = 1;
+    }
+    
+    repeated FailureDetails failure_details = 2;
+    message FailureDetails {
+        common.v2.PersonaId persona_id = 1;
+        
+        Reason reason = 2;
+        enum Reason {
+            UNKNOWN = 0;
+            NOT_PERMITTED = 1;
+        }
+    }
+}
+
+message SetGroupNameRequest {
+    common.v2.ChatId chat_id = 1;
+    common.v2.PersonaId changer = 2;
+    common.groups.v2.GroupName group_name = 3;
+}
+
+message SetGroupNameResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        NOT_PERMITTED = 1;
+        NAME_RESTRICTED = 2;
+    }
+}
+
+message GetGroupInfoByInviteCodeRequest {
+    common.groups.v2.GroupInviteCode invite_code = 1;
+}
+
+message GetGroupInfoByInviteCodeResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        NOT_FOUND = 1;
+    }
+    
+    common.chats.v2.GroupInfoDisplayOnly group_info = 2;
+    common.v2.ChatId chat_id = 3;
+}
+
+message GetGroupInfoByJoinTokenRequest {
+    common.groups.v2.PublicGroupJoinToken join_token = 1;
+}
+
+message GetGroupInfoByJoinTokenResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        NOT_FOUND = 1;
+    }
+    
+    common.chats.v2.GroupInfoDisplayOnly group_info = 2;
+    common.v2.ChatId chat_id = 3;
+}
+
+message JoinPublicGroupRequest {
+    common.groups.v2.PublicGroupJoinToken join_token = 1;
+}
+
+message JoinPublicGroupResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        INVALID_TOKEN = 1;
+        NOT_PERMITTED = 2;
+        BANNED = 3;
+        GROUP_FULL = 4;
+        JOIN_FREQUENCY_THRESHOLD = 5;
+        BAN_FREQUENCY_THRESHOLD = 6;
+    }
+    
+    common.v2.ChatId chat_id = 2;
+    common.v2.PersonaId membership_persona = 3;
+    FrequencyErrorDetails join_frequency_error_details = 4;
+}
+
+message JoinGroupByInviteCodeRequest {
+    common.groups.v2.GroupInviteCode invite_code = 1;
+    
+    CodeSource code_source = 2;
+    enum CodeSource {
+        CODE = 0;
+        LINK = 1;
+    }
+}
+
+message JoinGroupByInviteCodeResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        INVALID_INVITE_CODE = 1;
+        NOT_PERMITTED = 2;
+        BANNED = 3;
+        GROUP_FULL = 4;
+    }
+    
+    common.v2.ChatId chat_id = 2;
+    common.v2.PersonaId membership_persona = 3;
+}
+
+message CreateInviteCodeRequest {
+    common.v2.PersonaId creator = 1;
+    common.v2.ChatId chat_id = 2;
+}
+
+message CreateInviteCodeResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        NOT_PERMITTED = 1;
+    }
+    
+    common.groups.v2.GroupInviteCode invite_code = 2;
+}
+
+message BanFromGroupRequest {
+    common.v2.ChatId chat_id = 1;
+    common.v2.PersonaId persona_to_ban = 2;
+}
+
+message BanFromGroupResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        NOT_PERMITTED = 1;
+        BAN_LIST_FULL = 2;
+    }
+}
+
+message UnbanFromGroupRequest {
+    common.v2.ChatId chat_id = 1;
+    common.v2.PersonaId persona_to_unban = 2;
+}
+
+message UnbanFromGroupResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        NOT_PERMITTED = 1;
+    }
+}
+
+message PromoteMemberRequest {
+    common.v2.ChatId chat_id = 1;
+    common.v2.PersonaId persona_to_promote = 2;
+}
+
+message PromoteMemberResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        NOT_PERMITTED = 1;
+    }
+}
+
+message DemoteMemberRequest {
+    common.v2.ChatId chat_id = 1;
+    common.v2.PersonaId persona_to_demote = 2;
+}
+
+message DemoteMemberResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        NOT_PERMITTED = 1;
+    }
+}
+
+message SetIsDirectMessagingBlockedRequest {
+    common.v2.ChatId chat_id = 1;
+    bool is_direct_messaging_blocked = 2;
+}
+
+message SetIsDirectMessagingBlockedResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        NOT_FOUND = 1;
+    }
+}
+
+message SetChatThemeLockRequest {
+    common.v2.ChatId chat_id = 1;
+    
+    Action action = 2;
+    enum Action {
+        LOCK = 0;
+        UNLOCK = 1;
+    }
+}
+
+message SetChatThemeLockResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        NOT_PERMITTED = 1;
+    }
+}

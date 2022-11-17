@@ -1,0 +1,55 @@
+syntax = "proto2";
+
+package com.kik.deviceinfo.model;
+
+option java_package = "com.kik.deviceinfo.model";
+
+message DeviceInfoEnvelope {
+    required int32 encryptionKeyVersion = 1;
+    
+    required AlgorithmIdentifier algorithmIdentifier = 2;
+    enum AlgorithmIdentifier {
+        RSA_OAEP_WITH_AES_128_CBC = 1;
+    }
+    
+    required bytes encryptedSymmetricKey = 3;
+    required bytes encryptedDeviceInfoPayload = 4;
+}
+
+message SensorDescriptor {
+    required string name = 100;
+    required string make = 200;
+}
+
+message DeviceInfoPayload {
+    required string streamId = 100;
+    optional int64 systemUptime = 300;
+    optional int32 batteryLevel = 301;
+    optional bool batteryIsCharging = 302;
+    optional int32 batteryTemp = 303;
+    optional int32 batteryVoltage = 304;
+    optional bool isBigEndian = 305;
+    optional int64 clockDrift = 306;
+    optional bool hasProximitySensor = 307;
+    optional bool jailbroken = 308;
+    optional string deviceVersion = 309;
+    optional string deviceModel = 310;
+    optional string deviceType = 311;
+    optional int32 screenBrightness = 312;
+    optional int32 numberOfProcessors = 313;
+    optional int32 processorBusSpeed = 314;
+    optional int32 processorBusSpeedMultiplier = 315;
+    optional int32 memory = 316;
+    optional int32 usedMemory = 317;
+    optional int64 totalDiskSpace = 318;
+    optional int64 usedDiskSpace = 319;
+    optional string boardName = 320;
+    optional string deviceBrand = 321;
+    optional string serialNumber = 322;
+    optional string buildFingerprint = 323;
+    optional string bootLoader = 324;
+    optional string buildUser = 325;
+    optional string buildHost = 326;
+    repeated SensorDescriptor sensors = 400;
+    optional int32 hashCashTime = 500;
+}

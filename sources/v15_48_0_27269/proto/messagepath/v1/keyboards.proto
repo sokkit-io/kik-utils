@@ -1,0 +1,103 @@
+syntax = "proto3";
+
+package common.messagepath.v1;
+
+import "common_model.proto";
+import "common/v1/model.proto";
+import "protobuf_validation.proto";
+
+option objc_class_prefix = "MPTH";
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/messagepath/v1;messagepath";
+option java_package = "com.kik.messagepath.model";
+
+message KeyboardAttachment {
+    repeated Keyboard keyboards = 1;
+}
+
+message Keyboard {
+    XiBareUserJid to = 1 [deprecated = true];
+    common.v1.XiBareUserJidOrAliasJid to_v2 = 3;
+    bool hidden = 2;
+    
+    oneof type {
+        SuggestedResponseKeyboard suggested_response_keyboard = 32;
+    }
+}
+
+message SuggestedResponseKeyboard {
+    repeated SuggestedResponseItem responses = 1;
+}
+
+message SuggestedResponseItem {
+    string metadata = 1;
+    
+    oneof type {
+        TextSuggestedResponse text_response = 32;
+        PaymentSuggestedResponse payment_response = 33;
+        FriendPickerSuggestedResponse friend_picker_response = 34;
+        PictureSuggestedResponse picture_response = 35;
+    }
+}
+
+message TextSuggestedResponse {
+    string body = 1;
+}
+
+message PaymentSuggestedResponse {
+    string description = 1;
+    int32 amount = 2;
+    string currency = 3;
+    XiUuid transaction_id = 4;
+    
+    SavedCard saved_card = 5;
+    message SavedCard {
+        string last_4_digits = 1;
+        string brand = 2;
+    }
+}
+
+message FriendPickerSuggestedResponse {
+    string body = 1;
+    int32 min = 2;
+    int32 max = 3;
+    repeated XiBareUserJid preselected = 4;
+}
+
+message PictureSuggestedResponse {
+    string thumbnail_url = 1;
+    string pic_url = 3;
+    XiUuid pic_id = 5;
+}
+
+message KeyboardReplyAttachment {
+    oneof type {
+        SuggestedReply suggested_reply = 1;
+    }
+}
+
+message SuggestedReply {
+    string metadata = 1;
+    
+    oneof type {
+        TextSuggestedReply text_reply = 32;
+        PaymentSuggestedReply payment_reply = 33;
+        FriendPickerSuggestedReply friend_picker_reply = 34;
+        PictureSuggestedReply picture_reply = 35;
+    }
+}
+
+message TextSuggestedReply {
+    
+}
+
+message PaymentSuggestedReply {
+    
+}
+
+message FriendPickerSuggestedReply {
+    repeated XiBareUserJid picked = 1;
+}
+
+message PictureSuggestedReply {
+    XiUuid pic_id = 5;
+}

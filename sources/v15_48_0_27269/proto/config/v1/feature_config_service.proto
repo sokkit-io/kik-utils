@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package mobile.config.v1;
+
+import "protobuf_validation.proto";
+import "google/protobuf/duration.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/config/v1;config";
+option java_package = "com.kik.featureconfig.rpc";
+
+service FeatureConfig {
+    rpc GetFeatureConfigs(GetFeatureConfigsRequest) returns (GetFeatureConfigsResponse);
+    rpc GetAllUserInterestIds(GetAllUserInterestIdsRequest) returns (GetAllUserInterestIdsResponse);
+    rpc GetAllChatInterests(GetAllChatInterestsRequest) returns (GetAllChatInterestsResponse);
+}
+
+message GetFeatureConfigsRequest {
+    
+}
+
+message GetFeatureConfigsResponse {
+    uint32 max_group_size = 10;
+    bool user_roster_entry_updates_legacy_roster_timestamp = 11;
+    bool entity_service_get_trusted_bots_enabled = 12;
+    google.protobuf.Duration min_duration_between_pull_entity_service_get_trusted_bots = 13;
+    uint32 max_user_interests = 14;
+    repeated UserInterestListItem current_user_interest_list = 15;
+    repeated ChatInterestListItem current_chat_interest_list = 16;
+    
+    reserved 1, "result";
+}
+
+message UserInterestListItem {
+    string id = 1;
+    string localized_verbiage = 2;
+}
+
+message ChatInterestListItem {
+    string id = 1;
+    string localized_interest = 2;
+    string localized_ice_breaker = 3;
+    string interest_emoji = 4;
+}
+
+message GetAllUserInterestIdsRequest {
+    
+}
+
+message GetAllUserInterestIdsResponse {
+    repeated string ids = 1;
+}
+
+message GetAllChatInterestsRequest {
+    
+}
+
+message GetAllChatInterestsResponse {
+    repeated ChatInterestListItem chat_interests = 1;
+}

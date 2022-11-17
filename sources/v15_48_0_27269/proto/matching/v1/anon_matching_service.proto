@@ -1,0 +1,166 @@
+syntax = "proto3";
+
+package mobile.matching.v1;
+
+import "protobuf_validation.proto";
+import "google/protobuf/timestamp.proto";
+import "common_model.proto";
+import "common/v1/model.proto";
+import "matching/v1/matching_common.proto";
+import "kin/payment/v1/payment_common.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/matching/v1;matching";
+option java_package = "com.kik.matching.rpc";
+
+service AnonMatching {
+    rpc FindChatPartner(FindChatPartnerRequest) returns (FindChatPartnerResponse);
+    rpc CancelFindChatPartner(CancelFindChatPartnerRequest) returns (CancelFindChatPartnerResponse);
+    rpc EndChatSession(EndChatSessionRequest) returns (EndChatSessionResponse);
+    rpc GetChatSession(GetChatSessionRequest) returns (GetChatSessionResponse);
+    rpc RateChatSession(RateChatSessionRequest) returns (RateChatSessionResponse);
+    rpc GetRemainingAnonChats(GetRemainingAnonChatsRequest) returns (GetRemainingAnonChatsResponse);
+    rpc InitiateFriending(InitiateFriendingRequest) returns (InitiateFriendingResponse);
+    rpc SubmitUserGeneratedInterest(SubmitUserGeneratedInterestRequest) returns (SubmitUserGeneratedInterestResponse);
+    rpc GetEarnOfferDetails(GetEarnOfferDetailsRequest) returns (GetEarnOfferDetailsResponse);
+}
+
+message FindChatPartnerRequest {
+    repeated ChatInterest interests = 1;
+    string matching_variant = 2;
+}
+
+message FindChatPartnerResponse {
+    Result result = 1;
+    enum Result {
+        PARTNER_FOUND = 0;
+        IN_QUEUE = 1;
+        REJECTED = 2;
+        REJECTED_NO_REMAINING_SESSIONS = 3;
+        REJECTED_TEMPORARILY_BANNED = 4;
+    }
+    
+    common.XiUuid find_chat_request_id = 2;
+    SessionDetails session_details = 3;
+    google.protobuf.Timestamp rejected_expiry_time = 4;
+}
+
+message CancelFindChatPartnerRequest {
+    common.XiUuid find_chat_request_id = 1;
+}
+
+message CancelFindChatPartnerResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        SESSION_ALREADY_CREATED = 1;
+    }
+}
+
+message GetChatSessionRequest {
+    common.matching.v1.AnonMatchingSessionKey session_key = 1;
+}
+
+message GetChatSessionResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        NOT_FOUND = 1;
+    }
+    
+    SessionDetails session_details = 2;
+}
+
+message RateChatSessionRequest {
+    common.matching.v1.AnonMatchingSessionKey session_key = 1;
+    ChatSessionRating chat_rating = 2;
+}
+
+message ChatSessionRating {
+    SmileyChatRating rating = 1;
+    enum SmileyChatRating {
+        MAD_FACE = 0;
+        SAD_FACE = 1;
+        NEUTRAL_FACE = 2;
+        HAPPY_FACE = 3;
+        OPEN_MOUTH_HAPPY_FACE = 4;
+    }
+}
+
+message RateChatSessionResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        NOT_FOUND = 1;
+    }
+}
+
+message EndChatSessionRequest {
+    common.matching.v1.AnonMatchingSessionKey session_key = 1;
+    bool skip_chat = 2;
+}
+
+message EndChatSessionResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+    }
+}
+
+message GetRemainingAnonChatsRequest {
+    
+}
+
+message GetRemainingAnonChatsResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+    }
+    
+    int32 remaining_chats = 2;
+}
+
+message InitiateFriendingRequest {
+    common.matching.v1.AnonMatchingSessionKey session_key = 1;
+}
+
+message InitiateFriendingResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+    }
+}
+
+message SubmitUserGeneratedInterestRequest {
+    string interest = 1;
+}
+
+message SubmitUserGeneratedInterestResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        RATE_LIMITED = 1;
+    }
+}
+
+message GetEarnOfferDetailsRequest {
+    
+}
+
+message GetEarnOfferDetailsResponse {
+    int32 completed_daily_challenges = 1;
+    int32 required_daily_challenges = 2;
+    common.kin.payment.v1.KinAmount daily_earn_kin_amount = 3;
+}
+
+message ChatInterest {
+    string interest_id = 1;
+    string interest_name = 2;
+}
+
+message SessionDetails {
+    common.XiUuid session_id = 1;
+    common.v1.XiAliasJid chat_partner_alias = 3;
+    google.protobuf.Timestamp session_end_time = 4;
+    google.protobuf.Timestamp session_expiry_time = 5;
+    common.matching.v1.ChatSessionState session_state = 6;
+}

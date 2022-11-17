@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package mobile.iam.v2;
+
+import "protobuf_validation.proto";
+import "common/v2/model.proto";
+import "client/v2/client_meta.proto";
+import "client/v2/device_info.proto";
+import "session/v2/model.proto";
+import "tempban/v2/temp_ban_common.proto";
+
+option objc_class_prefix = "KPBMobileIAMV2";
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/iam/v2;iam";
+option java_package = "com.kik.gen.iam.v2";
+
+service Authentication {
+    rpc Authenticate(AuthenticateRequest) returns (AuthenticateResponse);
+    rpc RevokeSession(RevokeSessionRequest) returns (RevokeSessionResponse);
+}
+
+message AuthenticateRequest {
+    string captcha_solution = 3;
+    common.client.v2.DeviceInfoEnvelope device_info_envelope = 4;
+    bool is_user_login = 5;
+    
+    oneof credentials {
+        UsernameCredentials username_credentials = 1;
+        EmailCredentials email_credentials = 2;
+    }
+    
+    oneof device_info_type {
+        common.v2.ClientInstanceId client_instance_id = 10 [deprecated = true];
+        common.client.v2.DeviceDetails device_details = 11;
+    }
+    
+    message UsernameCredentials {
+        common.v2.Username username = 1;
+        bytes passkey = 2;
+    }
+    
+    message EmailCredentials {
+        common.v2.Email email = 1;
+        bytes passkey = 2;
+    }
+}
+
+message AuthenticateResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        FAILED = 1;
+        FAILED_UNKNOWN_PRINCIPAL = 2;
+        FAILED_INVALID_PASSKEY = 3;
+        FAILED_CAPTCHA_REQUIRED = 4;
+        FAILED_TEMP_BAN_ASSIGNED = 5;
+    }
+    
+    common.session.v2.SessionToken session_token = 2;
+    common.v2.AccountId account_id = 3;
+    common.v2.PersonaId genesis_persona = 4;
+    string captcha_url = 5;
+    common.v2.Username username = 6;
+    common.tempban.v2.TempBanInfo temp_ban_info = 7;
+}
+
+message RevokeSessionRequest {
+    
+}
+
+message RevokeSessionResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+    }
+}

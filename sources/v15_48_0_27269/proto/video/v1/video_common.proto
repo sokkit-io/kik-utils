@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package common.video.v1;
+
+import "common_model.proto";
+import "protobuf_validation.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/video/v1;video";
+option java_package = "com.kik.video";
+
+message ConvoId {
+    oneof kind {
+        OneToOneConvoId one_to_one = 1;
+        XiGroupJid group = 2;
+    }
+}
+
+message OneToOneConvoId {
+    repeated XiBareUserJid users = 1;
+}
+
+message ConvoVideoState {
+    ConvoId convo_id = 1;
+    
+    repeated UserState user_states = 2;
+    message UserState {
+        XiBareUserJid user = 1;
+        
+        State state = 2;
+        enum State {
+            NOT_SET = 0;
+            CONNECTING = 5;
+            CONNECTED = 10;
+        }
+    }
+    
+    google.protobuf.Timestamp timestamp = 3;
+}
+
+message ConferenceConnectionInfo {
+    string host = 1;
+    int32 port = 2;
+    string conference_id = 3;
+}
+
+message MediaServerConnectionToken {
+    bytes payload = 1;
+}

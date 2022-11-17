@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package common.chats.v2;
+
+import "protobuf_validation.proto";
+import "google/protobuf/timestamp.proto";
+import "common/v2/model.proto";
+import "chats/v2/chat_info.proto";
+import "asset/v2/chat_asset_common.proto";
+
+option objc_class_prefix = "KPBCommonChatsV2";
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/chats/v2;chats";
+option java_package = "com.kik.gen.chats.v2";
+
+message Chat {
+    common.v2.ChatId id = 1;
+    ChatThemeId chat_theme_id = 4;
+    MuteStatus mute_status = 5;
+    ChatCategory chat_category = 6;
+    
+    oneof info {
+        OneToOneInfo one_to_one_info = 2;
+        GroupInfoShort group_info = 3;
+        AnonMatchInfo anon_match_info = 7;
+    }
+}
+
+message ChatThemeId {
+    asset.v2.AssetId asset_id = 1;
+}
+
+message MuteStatus {
+    Status status = 1;
+    enum Status {
+        NOT_MUTED = 0;
+        MUTED = 1;
+    }
+    
+    google.protobuf.Timestamp expiry = 2;
+}
+
+message ChatCategory {
+    Category category = 1;
+    enum Category {
+        UNKNOWN = 0;
+        NEW = 1;
+        FRIENDLY = 2;
+    }
+}

@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package common.session.v2;
+
+import "protobuf_validation.proto";
+import "google/protobuf/timestamp.proto";
+
+option objc_class_prefix = "KPBCommonSessionV2";
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/session/v2;session";
+option java_package = "com.kik.gen.session.v2";
+
+message SessionToken {
+    Token token = 1;
+    message Token {
+        bytes raw_value = 1;
+    }
+    
+    google.protobuf.Timestamp expiry = 2;
+}

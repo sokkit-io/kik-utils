@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package common.asset.v1;
+
+import "protobuf_validation.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/asset/v1;asset";
+option java_package = "com.kik.asset.model";
+
+message ProductContent {
+    map<string, Asset> assets = 1;
+    
+    Type type = 2;
+    enum Type {
+        UNKNOWN = 0;
+        CHAT_THEME = 1;
+        AVATAR = 2;
+    }
+}
+
+message Asset {
+    MediaContent media_content = 10;
+    MediaContent media_content_preview = 11;
+    map<string, string> simple_content = 12;
+}
+
+message MediaContent {
+    string content_url = 1;
+    
+    Mimetype mimetype = 2;
+    enum Mimetype {
+        UNKNOWN = 0;
+        IMAGE_JPEG = 1;
+        IMAGE_PNG = 2;
+    }
+}
+
+enum PixelDensity {
+    NODPI = 0;
+    ANDROID_LDPI = 1;
+    ANDROID_MDPI = 2;
+    ANDROID_HDPI = 3;
+    ANDROID_XHDPI = 4;
+    ANDROID_XXHDPI = 5;
+    ANDROID_XXXHDPI = 6;
+    IOS_X1 = 7;
+    IOS_X2 = 8;
+    IOS_X3 = 9;
+}

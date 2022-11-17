@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package common.reporting.v2;
+
+import "protobuf_validation.proto";
+import "common/v2/model.proto";
+import "groups/v2/groups_common.proto";
+import "messaging/v2/model.proto";
+
+option objc_class_prefix = "KPBCommonReportingV2";
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/reporting/v2;reporting";
+option java_package = "com.kik.gen.reporting.v2.model";
+
+message Report {
+    common.v2.Uuid report_id = 1;
+    
+    ReportType report_type = 2;
+    message ReportType {
+        oneof report_kind {
+            UserProfileReport user_profile_report = 1;
+            GroupProfileReport group_profile_report = 2;
+            ChatReport chat_report = 3;
+        }
+    }
+    
+    ReportReason report_reason = 3;
+    enum ReportReason {
+        UNKNOWN = 0;
+        ABUSE = 1;
+        UNWANTED = 2;
+        OFFENSIVE = 3;
+        SPAM = 4;
+    }
+    
+    bool involves_minor = 4;
+    MessagesPage message_page = 5;
+}
+
+message UserProfileReport {
+    common.v2.PersonaId persona_id = 1;
+}
+
+message GroupProfileReport {
+    oneof group_identifier {
+        common.v2.ChatId chat_id = 1;
+        groups.v2.PublicGroupJoinToken group_join_token = 2;
+        groups.v2.GroupInviteCode group_invite_code = 3;
+    }
+}
+
+message ChatReport {
+    common.v2.ChatId chat_id = 1;
+    common.v2.PersonaId persona_id = 2;
+}
+
+message MessagesPage {
+    repeated messaging.v2.Message reported_message = 1;
+    bool is_final_page = 2;
+}

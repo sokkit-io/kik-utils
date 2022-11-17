@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package mobile.account.v2;
+
+import "common_rpc.proto";
+import "protobuf_validation.proto";
+import "common/v2/model.proto";
+import "accounts/v2/model.proto";
+
+option objc_class_prefix = "KPBMobileAccountV2";
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/account/v2;account";
+option java_package = "com.kik.gen.account.v2";
+
+service AccountSettings {
+    rpc ChangeEmailAddress(ChangeEmailAddressRequest) returns (ChangeEmailAddressResponse);
+    rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
+    rpc GetAccountInfo(common.VoidRequest) returns (AccountInfo);
+    rpc GetOneTimeUseFlags(common.VoidRequest) returns (GetOneTimeUseFlagsResponse);
+    rpc SetOneTimeUseFlags(SetOneTimeUseFlagsRequest) returns (SetOneTimeUseFlagsResponse);
+}
+
+message AccountInfo {
+    common.v2.Email email = 2;
+    bool is_email_confirmed = 3;
+}
+
+message ChangeEmailAddressRequest {
+    bytes current_username_derived_passkey = 1;
+    common.v2.Email new_email = 2;
+    bytes new_email_derived_passkey = 3;
+}
+
+message ChangeEmailAddressResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        INVALID_CURRENT_PASSKEY = 1;
+        NOT_PERMITTED = 2;
+        EMAIL_NOT_AVAILABLE = 3;
+    }
+}
+
+message ChangePasswordRequest {
+    bytes current_username_derived_passkey = 1;
+    bytes new_username_derived_passkey = 2;
+    bytes new_email_derived_passkey = 3;
+}
+
+message ChangePasswordResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        INVALID_CURRENT_PASSKEY = 1;
+    }
+}
+
+message GetOneTimeUseFlagsResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+    }
+    
+    repeated common.accounts.v2.OneTimeUseFlag set_flags = 2;
+}
+
+message SetOneTimeUseFlagsRequest {
+    repeated common.accounts.v2.OneTimeUseFlag flags_to_set = 1;
+    repeated common.accounts.v2.OneTimeUseFlag flags_to_unset = 2;
+}
+
+message SetOneTimeUseFlagsResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+    }
+}

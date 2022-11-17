@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package mobile.abtesting.v1;
+
+import "common_model.proto";
+import "abtesting/v1/ab_testing_shared.proto";
+import "protobuf_validation.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/abtesting/v1;abtesting";
+option java_package = "com.kik.abtesting.rpc";
+
+service AbTesting {
+    rpc GetParticipatingExperiments(GetExperimentsRequest) returns (GetExperimentsResponse);
+}
+
+message GetExperimentsRequest {
+    common.XiBareUserJid jid = 1;
+    repeated common.abtesting.v1.Experiment participating_experiments = 2;
+}
+
+message GetExperimentsResponse {
+    repeated common.abtesting.v1.Experiment participating_experiments = 1;
+    bool should_send_metrics_event = 2;
+}

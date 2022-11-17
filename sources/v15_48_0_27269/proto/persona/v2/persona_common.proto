@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package common.persona.v2;
+
+import "google/protobuf/timestamp.proto";
+import "protobuf_validation.proto";
+import "asset/v1/asset_common.proto";
+import "blob/v2/model.proto";
+import "common/v2/model.proto";
+import "kin/account/v2/account_common.proto";
+
+option objc_class_prefix = "KPBCommonPersonaV2";
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/persona/v2;persona";
+option java_package = "com.kik.gen.persona.v2";
+
+message PersonaShort {
+    common.v2.PersonaId persona_id = 1;
+    common.v2.ChatId one_to_one_id = 9;
+    bool signalling_disabled = 2;
+    Username username = 3;
+    DisplayName display_name = 4;
+    DisplayImage display_image_legacy = 5 [deprecated = true];
+    blob.v2.BlobReference display_image = 8;
+    EmojiStatus emoji_status = 6;
+    BotExtension bot_extension = 7;
+}
+
+message PersonaFull {
+    PersonaShort short = 1;
+    Bio bio = 2;
+    DisplayImage original_display_pic_legacy = 3 [deprecated = true];
+    DisplayImage background_display_pic_legacy = 4 [deprecated = true];
+    blob.v2.BlobReference original_display_pic = 9;
+    blob.v2.BlobReference background_display_pic = 10;
+    Registration registration = 5;
+    Interests interests = 6;
+    common.v2.PersonaId contact_list_persona_id = 7;
+    kin.account.v2.KinAccountId active_kin_account_id = 8;
+}
+
+message Username {
+    string username = 1;
+}
+
+message DisplayName {
+    string display_name = 1;
+}
+
+message DisplayImage {
+    asset.v1.MediaContent image = 1;
+    asset.v1.MediaContent image_preview = 2;
+    google.protobuf.Timestamp last_updated_timestamp = 3;
+}
+
+message BotExtension {
+    bool is_kin_verified = 1;
+}
+
+message EmojiStatus {
+    string kik_asset_id = 1;
+}
+
+message Bio {
+    string bio = 1;
+}
+
+message Registration {
+    google.protobuf.Timestamp creation_date = 1;
+}
+
+message Interests {
+    repeated InterestItem interests = 1;
+    message InterestItem {
+        string id = 1;
+        string localized_verbiage = 2;
+    }
+}

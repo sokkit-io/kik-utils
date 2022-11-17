@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package common.blob.v2;
+
+import "protobuf_validation.proto";
+
+option objc_class_prefix = "KPBCommonBlobV2";
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/blob/v2;blob";
+option java_package = "com.kik.gen.blob.v2";
+
+message BlobReference {
+    Id id = 1;
+    message Id {
+        bytes raw_value = 1;
+    }
+    
+    repeated BlobUrl urls = 2;
+}
+
+message BlobUrl {
+    string url = 1;
+    BlobType blob_type = 2;
+    MediaType media_type = 3;
+}
+
+message UserGeneratedBlobDetails {
+    string original_file_name = 1;
+    bytes md5 = 2;
+}
+
+enum BlobType {
+    ORIGINAL = 0;
+    PREVIEW = 1;
+}
+
+enum MediaType {
+    UKNOWN = 0;
+    IMAGE_JPEG = 1;
+    IMAGE_PNG = 2;
+    VIDEO_MP4 = 3;
+    VIDEO_WEBM = 4;
+    IMAGE_GIF = 5;
+}

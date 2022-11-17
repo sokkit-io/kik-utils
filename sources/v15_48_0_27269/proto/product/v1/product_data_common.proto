@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package common.product.v1;
+
+import "protobuf_validation.proto";
+import "common/v1/model.proto";
+import "kin/authentication/v1/authentication_common.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/product/v1;product";
+option java_package = "com.kik.product.model";
+
+message PriceData {
+    uint64 kin_value = 1;
+}
+
+message PurchaseData {
+    bool purchased = 1;
+}
+
+message PaymentConfirmation {
+    kin.authentication.v1.OfferId offer_id = 1;
+    common.v1.XiJWT jwt = 2;
+}

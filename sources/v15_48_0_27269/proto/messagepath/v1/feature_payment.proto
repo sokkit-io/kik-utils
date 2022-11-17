@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package common.messagepath.v1;
+
+import "protobuf_validation.proto";
+import "common/v1/model.proto";
+import "kin/payment/v1/payment_common.proto";
+import "offer/v1/kik_offer_common.proto";
+
+option objc_class_prefix = "KPB";
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/messagepath/v1;messagepath";
+option java_package = "com.kik.messagepath.model";
+
+message TransactionDetailsAttachment {
+    Target target = 1;
+    enum Target {
+        UNKNOWN = 0;
+        SENDER = 1;
+        RECIPIENT = 2;
+    }
+    
+    kin.payment.v1.KinAmount amount = 2;
+    common.v1.XiBareUserJidOrAliasJid sender_jid = 3;
+    common.v1.XiBareUserJidOrAliasJid recipient_jid = 4;
+    offer.v1.UserOfferData user_offer_data = 5;
+}

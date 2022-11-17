@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package mobile.profile.v1;
+
+import "common_model.proto";
+import "protobuf_validation.proto";
+import "profile/v1/profile_common.proto";
+import "common/v1/model.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/profile/v1;profile";
+option java_package = "com.kik.profile";
+
+service Profile {
+    rpc SetUserProfile(SetUserProfileRequest) returns (SetUserProfileResponse);
+    rpc SetGroupProfile(SetGroupProfileRequest) returns (SetGroupProfileResponse);
+    rpc SetConvoProfile(SetConvoProfileRequest) returns (SetConvoProfileResponse);
+}
+
+message SetUserProfileRequest {
+    common.XiBareUserJid id = 1;
+    common.profile.v1.BioAction bio = 2;
+    common.profile.v1.OriginalProfilePicExtensionAction original_profile_pic_extension_action = 3;
+    common.profile.v1.BackgroundProfilePicExtensionAction background_profile_pic_extension_action = 4;
+    common.profile.v1.EmojiStatusAction emoji_status = 5;
+    common.profile.v1.InterestsAction interests = 6;
+    common.profile.v1.AnonMatchAvatarAction anon_match_avatar_action = 7;
+}
+
+message SetUserProfileResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        VALIDATION_ERROR = 1;
+    }
+    
+    repeated RejectionReason rejection_reasons = 2;
+}
+
+message SetGroupProfileRequest {
+    common.XiGroupJid id = 1;
+    common.profile.v1.BioAction bio = 2;
+    common.profile.v1.OriginalProfilePicExtensionAction original_profile_pic_extension_action = 3;
+    common.profile.v1.BackgroundProfilePicExtensionAction background_profile_pic_extension_action = 4;
+}
+
+message SetGroupProfileResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        VALIDATION_ERROR = 1;
+    }
+    
+    repeated RejectionReason rejection_reasons = 2;
+}
+
+message SetConvoProfileRequest {
+    common.v1.XiConvoId id = 1;
+    common.profile.v1.ChatThemeAction chat_theme_action = 2;
+    common.profile.v1.ChatThemeLockAction chat_theme_lock_action = 3;
+}
+
+message SetConvoProfileResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        FORBIDDEN_ERROR = 1;
+    }
+}
+
+message RejectionReason {
+    Code code = 1;
+    enum Code {
+        FORBIDDEN = 0;
+        REJECTED_BIO_BY_MODERATION = 1;
+        REJECTED_ORIGINAL_PROFILE_PIC_EXTENSION_BY_MODERATION = 2;
+        REJECTED_BACKGROUND_PROFILE_PIC_EXTENSION_BY_MODERATION = 3;
+    }
+}

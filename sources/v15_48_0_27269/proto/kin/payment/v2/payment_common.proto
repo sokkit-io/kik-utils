@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package common.kin.payment.v2;
+
+import "protobuf_validation.proto";
+import "common/v2/model.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/kin/payment/v2;payment";
+option java_package = "com.kik.gen.kin.payment.v2.model";
+
+message KinAmount {
+    common.v2.BigDecimal amount = 1;
+}
+
+enum TransactionType {
+    UNKNOWN = 0;
+    EARN = 1;
+    SPEND = 2;
+}

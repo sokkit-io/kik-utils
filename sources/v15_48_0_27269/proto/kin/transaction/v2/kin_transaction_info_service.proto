@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package mobile.kin.transaction.v2;
+
+import "protobuf_validation.proto";
+import "kin/transaction/v2/transaction_common.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/kin/transaction/v2;transaction";
+option java_package = "com.kik.gen.kin.transaction.v2";
+
+service KinTransactionInfo {
+    rpc GetTransactions(GetTransactionsRequest) returns (GetTransactionsResponse);
+    rpc GetTransactionsById(GetTransactionsByIdRequest) returns (GetTransactionsByIdResponse);
+}
+
+message GetTransactionsRequest {
+    PageToken page_token = 1;
+}
+
+message GetTransactionsResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        NOT_FOUND = 2;
+    }
+    
+    repeated TransactionEntry transaction_entries = 2;
+    PageToken page_token = 3;
+}
+
+message GetTransactionsByIdRequest {
+    repeated common.kin.transaction.v2.TransactionId transaction_ids = 1;
+}
+
+message GetTransactionsByIdResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        PARTIAL = 1;
+        NOT_FOUND = 2;
+    }
+    
+    repeated TransactionEntry transaction_entries = 2;
+}
+
+message TransactionEntry {
+    common.kin.transaction.v2.TransactionPaymentInfo payment_info = 1;
+    common.kin.transaction.v2.TransactionDisplayInfo display_info = 2;
+}
+
+message PageToken {
+    bytes token = 1;
+}

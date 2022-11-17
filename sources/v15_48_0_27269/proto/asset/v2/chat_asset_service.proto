@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+package mobile.asset.v2;
+
+import "protobuf_validation.proto";
+import "asset/v2/chat_asset_common.proto";
+import "marketplace/v2/marketplace_common.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/asset/v2;asset";
+option java_package = "com.kik.gen.asset.v2";
+
+service ChatAssets {
+    rpc GetChatTheme(GetChatThemeRequest) returns (GetChatThemeResponse);
+    rpc GetChatThemeCollection(GetChatThemeCollectionRequest) returns (GetChatThemeCollectionResponse);
+    rpc GetTutorial(GetTutorialRequest) returns (GetTutorialResponse);
+}
+
+message GetChatThemeRequest {
+    common.asset.v2.AssetId chat_theme_id = 1;
+    common.asset.v2.PixelDensity pixel_density = 2;
+}
+
+message GetChatThemeResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        NOT_FOUND = 1;
+    }
+    
+    ChatThemeResult chat_theme_result = 2;
+}
+
+message GetChatThemeCollectionRequest {
+    common.asset.v2.CollectionId collection_id = 1;
+    common.asset.v2.PixelDensity pixel_density = 2;
+    PageToken page_token = 3;
+}
+
+message GetChatThemeCollectionResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        NOT_FOUND = 1;
+    }
+    
+    repeated ChatThemeResult chat_themes_results = 2;
+    PageToken page_token = 3;
+}
+
+message GetTutorialRequest {
+    common.asset.v2.AssetId tutorial_id = 1;
+    common.asset.v2.PixelDensity pixel_density = 2;
+}
+
+message GetTutorialResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        NOT_FOUND = 1;
+    }
+    
+    TutorialResult tutorial_result = 2;
+}
+
+message ChatThemeResult {
+    common.asset.v2.ChatTheme chat_theme = 1;
+    common.marketplace.v2.ListingId listing_id = 2;
+    Ownership ownership = 3;
+}
+
+message TutorialResult {
+    common.asset.v2.Tutorial tutorial = 1;
+    common.marketplace.v2.ListingId listing_id = 2;
+}
+
+message Ownership {
+    bool unlocked = 1;
+}
+
+message PageToken {
+    bytes token = 1;
+}

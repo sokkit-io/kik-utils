@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package mobile.signal.v2;
+
+import "protobuf_validation.proto";
+import "signal/v2/model.proto";
+
+option objc_class_prefix = "KPBMobileSignalV2";
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/signal/v2;signal";
+option java_package = "com.kik.gen.signal.v2";
+
+service Signal {
+    rpc OpenSignalStream(OpenSignalStreamRequest) returns (stream Signals);
+    rpc UpdateStreamPointer(UpdateStreamPointerRequest) returns (UpdateStreamPointerResponse);
+}
+
+message OpenSignalStreamRequest {
+    
+}
+
+message Signals {
+    repeated common.signal.v2.Signal signals = 1;
+}
+
+message UpdateStreamPointerRequest {
+    common.signal.v2.Signal.Id signal_id = 1;
+}
+
+message UpdateStreamPointerResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+    }
+}

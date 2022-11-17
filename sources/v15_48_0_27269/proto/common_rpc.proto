@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package common;
+
+import "google/protobuf/descriptor.proto";
+import "protobuf_validation.proto";
+import "common_model.proto";
+import "kik_options.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go;common";
+option java_multiple_files = true;
+option java_outer_classname = "CommonRpcProto";
+option java_package = "com.kik.xiphias.rpc";
+
+message VoidRequest {
+    
+}
+
+message VoidResponse {
+    
+}
+
+message XiRequestId {
+    XiUuid id = 1;
+}
+
+message XiRoutingToken {
+    string token = 1;
+}
+
+message SelfDescribingMessage {
+    google.protobuf.FileDescriptorSet field_descriptor_set = 1;
+    string message_name = 2;
+    bytes message_data = 3;
+}

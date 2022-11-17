@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package common.kin.transaction.v2;
+
+import "google/protobuf/timestamp.proto";
+import "protobuf_validation.proto";
+import "kin/account/v2/account_common.proto";
+import "kin/payment/v2/payment_common.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/kin/transaction/v2;transaction";
+option java_package = "com.kik.gen.kin.transaction.v2.model";
+
+message TransactionPaymentInfo {
+    TransactionId transaction_id = 1;
+    account.v2.KinAccountId sender_kin_account_id = 2;
+    account.v2.KinAccountId recipient_kin_account_id = 3;
+    payment.v2.KinAmount amount = 4;
+    payment.v2.TransactionType transaction_type = 5;
+    google.protobuf.Timestamp submission_time = 6;
+    google.protobuf.Timestamp confirmation_time = 7;
+    
+    TransactionStatus status = 8;
+    enum TransactionStatus {
+        IN_PROGRESS = 0;
+        SUCCESS = 1;
+        FAIL = 2;
+    }
+    
+    TransactionFailureReason reason = 9;
+    enum TransactionFailureReason {
+        UNKNOWN = 0;
+        BLOCKCHAIN_TIMEOUT = 1;
+        INSUFFICIENT_FUNDS = 2;
+        INVALID_SEQUENCE_NUMBER = 3;
+    }
+}
+
+message TransactionDisplayInfo {
+    string title = 1;
+    string description = 2;
+}
+
+message TransactionEnvelope {
+    bytes raw_value = 1;
+}
+
+message TransactionId {
+    string transaction_hash = 1;
+    uint32 operation_index = 2;
+}

@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package mobile.kikcode.v2;
+
+import "protobuf_validation.proto";
+import "common/v2/model.proto";
+
+option objc_class_prefix = "KPBMobileKikCodeV2";
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/kikcode/v2;kikcode";
+option java_package = "com.kik.gen.kikcode.v2";
+
+service KikCode {
+    rpc NotifyKikCodeScanned(NotifyKikCodeScannedRequest) returns (NotifyKikCodeScannedResponse);
+}
+
+message NotifyKikCodeScannedRequest {
+    common.v2.PersonaId scanning_user = 1;
+    common.v2.PersonaId scanned_user = 2;
+    uint32 nonce = 3;
+    string payload = 4;
+}
+
+message NotifyKikCodeScannedResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+    }
+}

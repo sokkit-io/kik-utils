@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package common.v1;
+
+import "kik_options.proto";
+import "protobuf_validation.proto";
+import "common_model.proto";
+
+option objc_class_prefix = "KPB";
+option java_generate_equals_and_hash = true;
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/common/v1;common";
+option java_multiple_files = true;
+option java_outer_classname = "ModelProto";
+option java_package = "com.kik.common";
+
+message XiAliasJid {
+    string local_part = 1;
+}
+
+message XiBareUserJidOrAliasJid {
+    oneof jid_type {
+        XiBareUserJid bare_user_jid = 1;
+        XiAliasJid alias_user_jid = 2;
+    }
+}
+
+message XiAnyJid {
+    oneof jid_type {
+        XiBareUserJid bare_user_jid = 1;
+        XiAliasJid alias_user_jid = 2;
+        XiGroupJid group_jid = 3;
+    }
+}
+
+message XiKinUserId {
+    string id = 1;
+}
+
+message XiConvoId {
+    oneof kind {
+        OneToOneConvoId one_to_one = 1;
+        XiGroupJid group = 2;
+    }
+}
+
+message OneToOneConvoId {
+    repeated XiBareUserJid users = 1;
+}
+
+message XiJWT {
+    string jwt = 1;
+}

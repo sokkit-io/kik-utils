@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package common.messagepath.v1;
+
+import "protobuf_validation.proto";
+
+option objc_class_prefix = "MPTH";
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/messagepath/v1;messagepath";
+option java_package = "com.kik.messagepath.model";
+
+message AdaptiveCardAttachment {
+    oneof content {
+        string card_id = 1;
+        string card_definition = 2;
+    }
+}

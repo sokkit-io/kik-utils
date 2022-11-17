@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package common.v2;
+
+import "kik_options.proto";
+import "protobuf_validation.proto";
+
+option objc_class_prefix = "KPBCommonV2";
+option java_generate_equals_and_hash = true;
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/common/v2;common";
+option java_multiple_files = true;
+option java_package = "com.kik.gen.common.v2";
+
+message AccountId {
+    string local_part = 1;
+}
+
+message PersonaId {
+    bytes raw_value = 1;
+}
+
+message ChatId {
+    bytes raw_value = 1;
+}
+
+message OneToOneId {
+    repeated PersonaId personas = 1;
+}
+
+message ClientInstanceId {
+    bytes uuid_bytes = 1;
+}
+
+message Uuid {
+    bytes raw_value = 1;
+}
+
+message Email {
+    string email = 1;
+}
+
+message Username {
+    string username = 2;
+}
+
+message BigDecimal {
+    string string_value = 2;
+}

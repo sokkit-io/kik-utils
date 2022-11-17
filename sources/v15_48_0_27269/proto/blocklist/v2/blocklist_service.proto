@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package mobile.blocklist.v2;
+
+import "protobuf_validation.proto";
+import "common/v2/model.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/blocklist/v2;blocklist";
+option java_package = "com.kik.gen.blocklist.v2";
+
+service Blocklist {
+    rpc Block(BlockRequest) returns (BlockResponse);
+    rpc Unblock(UnblockRequest) returns (UnblockResponse);
+    rpc IsBlocked(IsBlockedRequest) returns (IsBlockedResponse);
+    rpc GetBlocklistStream(GetBlocklistStreamRequest) returns (stream GetBlocklistStreamResponse);
+}
+
+message BlockRequest {
+    common.v2.PersonaId blockee = 1;
+}
+
+message BlockResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+    }
+}
+
+message UnblockRequest {
+    common.v2.PersonaId blockee = 1;
+}
+
+message UnblockResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+    }
+}
+
+message IsBlockedRequest {
+    common.v2.PersonaId blockee = 1;
+}
+
+message IsBlockedResponse {
+    bool is_blocked = 1;
+}
+
+message GetBlocklistStreamRequest {
+    
+}
+
+message GetBlocklistStreamResponse {
+    repeated BlocklistEntry blockees = 1;
+}
+
+message BlocklistEntry {
+    common.v2.PersonaId blockee = 1;
+    bool do_not_display = 2;
+}

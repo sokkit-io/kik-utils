@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package common.messagepath.v1;
+
+import "protobuf_validation.proto";
+import "video/v2/model.proto";
+import "common/v2/model.proto";
+
+option objc_class_prefix = "MPTH";
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/messagepath/v1;messagepath";
+option java_package = "com.kik.messagepath.model";
+
+message VideoConferenceUpdateAttachment {
+    oneof kind {
+        VideoConferenceStarted video_conference_started = 1;
+        VideoConferenceTerminated video_conference_terminated = 2;
+        VideoConferenceMissed video_conference_missed = 3;
+    }
+    
+    message VideoConferenceStarted {
+        v2.ChatId chat_id = 1;
+        video.v2.VideoConferenceId video_conference_id = 2;
+    }
+    
+    message VideoConferenceTerminated {
+        v2.ChatId chat_id = 1;
+        video.v2.VideoConferenceId video_conference_id = 2;
+    }
+    
+    message VideoConferenceMissed {
+        v2.ChatId chat_id = 1;
+        video.v2.VideoConferenceId video_conference_id = 2;
+    }
+}

@@ -1,0 +1,18 @@
+syntax = "proto2";
+
+package kik;
+
+import "google/protobuf/descriptor.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/kikoptions;kikoptions";
+option java_package = "com.kik.options";
+
+message CheckStyleOptions {
+    optional bool ignore_path = 1 [default = false];
+    optional bool ignore_version = 2 [default = false];
+    optional bool ignore_package_prefix = 3 [default = false];
+}
+
+extend google.protobuf.FileOptions {
+    optional CheckStyleOptions checkstyle = 86581;
+}

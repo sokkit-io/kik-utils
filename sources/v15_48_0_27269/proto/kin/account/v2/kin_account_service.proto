@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package mobile.kin.account.v2;
+
+import "protobuf_validation.proto";
+import "common_rpc.proto";
+import "kin/account/v2/account_common.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/kin/account/v2;account";
+option java_package = "com.kik.gen.kin.account.v2";
+
+service KinAccount {
+    rpc RegisterAccount(RegisterAccountRequest) returns (RegisterAccountResponse);
+    rpc GetKikAccount(common.VoidRequest) returns (GetKikAccountResponse);
+}
+
+message RegisterAccountRequest {
+    common.kin.account.v2.KinAccountId kin_account = 1;
+}
+
+message RegisterAccountResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        INVALID_ACCOUNT_ID = 1;
+        ACCOUNT_ALREADY_REGISTERED = 2;
+        LIMIT_EXCEEDED = 3;
+        NOT_AUTHORIZED = 4;
+    }
+}
+
+message GetKikAccountResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        NOT_AUTHORIZED = 1;
+    }
+    
+    common.kin.account.v2.KinAccountId kin_account = 2;
+}

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package common.abtesting.v1;
+
+import "protobuf_validation.proto";
+
+option objc_class_prefix = "XIAB";
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/abtesting/v1;abtesting";
+option java_package = "com.kik.abtesting.rpc";
+
+message Experiment {
+    string name = 1;
+    string variant = 2;
+    string experiment_id = 3;
+}

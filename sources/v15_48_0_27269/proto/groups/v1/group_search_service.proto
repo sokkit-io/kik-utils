@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package mobile.groups.v1;
+
+import "common_model.proto";
+import "protobuf_validation.proto";
+import "groups/v1/groups_common.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/groups/v1;groups";
+option java_package = "com.kik.groups";
+
+service GroupSearch {
+    rpc FindGroups(FindGroupsRequest) returns (FindGroupsResponse);
+    rpc GetGroupSuggestions(GetGroupSuggestionsRequest) returns (GetGroupSuggestionsResponse);
+}
+
+message PublicGroupJoinToken {
+    bytes token = 1;
+}
+
+message GetGroupSuggestionsRequest {
+    
+}
+
+message GetGroupSuggestionsResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        RATE_LIMIT_EXCEEDED = 1;
+    }
+    
+    repeated LimitedGroupDetails suggestion = 2;
+}
+
+message FindGroupsRequest {
+    string query = 1;
+}
+
+message FindGroupsResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        RATE_LIMIT_EXCEEDED = 1;
+    }
+    
+    repeated LimitedGroupDetails match = 2;
+    bool is_available_for_creation = 3;
+}
+
+message LimitedGroupDetails {
+    common.XiGroupJid jid = 1;
+    common.groups.v1.GroupDisplayData display_data = 2;
+    uint32 member_count = 3;
+    google.protobuf.Timestamp last_activity_time = 4;
+    uint32 max_group_size = 5;
+    uint32 active_members = 6;
+    PublicGroupJoinToken group_join_token = 100;
+}

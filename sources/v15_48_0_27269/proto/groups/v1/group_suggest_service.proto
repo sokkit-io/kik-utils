@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package mobile.groups.v1;
+
+import "protobuf_validation.proto";
+import "asset/v1/asset_common.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/groups/v1;groups";
+option java_package = "com.kik.groups";
+
+service GroupSuggest {
+    rpc GetSuggestedGroupSearchTerms(GetSuggestedGroupSearchTermsRequest) returns (GetSuggestedGroupSearchTermsResponse);
+}
+
+message GetSuggestedGroupSearchTermsRequest {
+    
+}
+
+message GetSuggestedGroupSearchTermsResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        RATE_LIMIT_EXCEEDED = 1;
+    }
+    
+    repeated SuggestedTerm suggested_term = 2;
+    message SuggestedTerm {
+        string term = 1;
+        common.asset.v1.MediaContent suggested_group_avatar_pic = 2;
+        common.asset.v1.MediaContent suggested_group_kik_asset = 3;
+    }
+}

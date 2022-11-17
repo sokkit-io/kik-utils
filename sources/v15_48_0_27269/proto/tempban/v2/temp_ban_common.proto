@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package common.tempban.v2;
+
+import "protobuf_validation.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/tempban/v2;tempban";
+option java_package = "com.kik.gen.tempban.v2.model";
+
+message TempBanInfo {
+    google.protobuf.Duration total_duration = 1;
+    google.protobuf.Timestamp expire_at = 2;
+    TempBanReason reason = 3;
+}
+
+enum TempBanReason {
+    TOS_VIOLATION = 0;
+    UNACCEPTABLE_GROUP_PROFILE_PIC = 1;
+    UNACCEPTABLE_USER_PRIMARY_PROFILE_PIC = 2;
+    UNACCEPTABLE_USER_BACKGROUND_PROFILE_PIC = 3;
+    UNACCEPTABLE_IMAGE_CHAT = 4;
+    REPORTED_FOR_ABUSE = 5;
+    UNACCEPTABLE_IMAGE_FROM_ABUSE_REPORT = 6;
+    SUSPECTED_SPAM = 7;
+    SUSPECTED_ILLEGAL = 8;
+}

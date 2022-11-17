@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package common.groups.v1;
+
+import "google/protobuf/timestamp.proto";
+import "common_model.proto";
+import "protobuf_validation.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/groups/v1;groups";
+option java_package = "com.kik.groups";
+
+message GroupRosterEntry {
+    XiGroupJid jid = 1;
+    GroupDisplayData display_data = 2;
+    bool is_public = 11;
+    google.protobuf.Timestamp last_updated = 13;
+    repeated GroupMember members = 14;
+    repeated BannedGroupMember banned_members = 15;
+    
+    oneof group_or_member_deleted {
+        bool is_group_deleted = 12;
+        bool is_member_deleted = 16;
+    }
+    
+    reserved 3;
+}
+
+message GroupDisplayData {
+    string hashtag = 2 [deprecated = true];
+    string display_name = 3 [deprecated = true];
+    GroupCode group_code = 6;
+    GroupName group_name = 7;
+    string display_pic_base_url = 4;
+    uint64 display_pic_last_modified = 5;
+}
+
+message GroupMember {
+    XiBareUserJid jid = 1;
+    bool is_admin = 3;
+    bool is_super_admin = 4;
+    bool is_inactive = 5;
+    bool is_bot = 6;
+    bool direct_messaging_disabled = 7;
+}
+
+message BannedGroupMember {
+    XiBareUserJid jid = 1;
+}
+
+message GroupCode {
+    string hashtag = 1;
+}
+
+message GroupName {
+    string display_name = 3;
+}
+
+message GroupInviteCode {
+    string code = 1;
+}

@@ -1,0 +1,147 @@
+syntax = "proto2";
+
+package com.kik.clientmetrics;
+
+option optimize_for = SPEED;
+option java_package = "com.kik.clientmetrics.model";
+
+message ClientUserEvent {
+    required ClientUserEventType type = 1;
+}
+
+message ClientPacketEvent {
+    required ClientPacketEventType type = 1;
+    required string packetId = 2;
+}
+
+message ClientEventData {
+    optional ClientUserEvent userEvent = 1;
+    optional ClientPacketEvent packetEvent = 2;
+    required int64 timestamp = 3;
+    required sfixed32 instanceId = 4;
+    optional string relatedPacket = 6;
+    repeated string relatedUserJids = 7;
+    repeated Data data = 8;
+    repeated NumericData numericData = 9;
+    repeated ListData listData = 10;
+}
+
+message ClientUploadRequest {
+    required string userId = 1;
+    required string devicePrefix = 2;
+    optional string clientVersion = 5;
+    repeated ClientEventData events = 4;
+    optional string anonymousId = 6;
+}
+
+message Data {
+    required string k = 1;
+    required string v = 2;
+}
+
+message NumericData {
+    required string k = 1;
+    required int64 v = 2;
+}
+
+message ListData {
+    required string k = 1;
+    repeated string v = 2;
+}
+
+enum ClientUserEventType {
+    DISCARDED_DATA = 300;
+    FIRST_EVER_RUN = 301;
+    SCREEN_VISITED = 302;
+    FIELD_VISITED = 303;
+    LOGIN_SUCCESS = 304;
+    LOGIN_ERROR = 305;
+    REGISTRATION_SUCCESS = 306;
+    REGISTRATION_ERROR = 307;
+    UNIT_TEST = 308;
+    AB_SELECTION = 309;
+    APP_OPENED = 310;
+    STREAM_INIT_COMPLETE = 311;
+    OPEN_CONVERSATIONS_CHANGED = 312;
+    MISSED_CONVERSATIONS_CHANGED = 313;
+    SIDEBAR_OPENED = 314;
+    CARD_LOADED = 315;
+    CARD_DELETED = 316;
+    CARD_ERROR_PROMPT_DISPLAYED = 317;
+    CARD_SWITCH_BEFORE_READY = 318;
+    CERTIFICATE_ERROR = 319;
+    CARD_FAVORITED = 320;
+    CARD_UNFAVORITED = 321;
+    SETTINGS_VISITED = 322;
+    USER_SEARCHED = 323;
+    EXPLICIT_SEARCH_SCREEN_VISITED = 324;
+    IAP_PURCHASE_SUCCESSFUL = 325;
+    IAP_PURCHASE_CANCELLED = 326;
+    IAP_PURCHASE_ERROR = 327;
+    MEDIA_TRAY_OPENED = 328;
+    MEDIA_TRAY_LAUNCHED_CARD = 329;
+    SMILEY_TRAY_OPENED = 330;
+    SMILEY_TRAY_SMILEY_SELECTED = 331;
+    PICKER_BACK_PRESSED = 332;
+    CONVO_OPENED = 333;
+    SEARCH_SUGGESTIONS_SHOWN = 336;
+    SEARCH_SUGGESTION_VISITED = 337;
+    SEARCH_ERROR = 338;
+    SEARCH_COMPLETED = 339;
+    SETTING_USED = 340;
+    STICKERS_OPENED_FROM_SMILEY = 341;
+    STICKERS_OPENED_FROM_TRAY = 342;
+    NETWORK_PING = 343;
+    APP_READY = 344;
+    CONNECTION_FAILED_DIALOG_SHOWN = 345;
+    CHAT_BUBBLE_COLOR_OPENED = 346;
+    CHAT_BUBBLE_COLOR_CHANGED = 347;
+    MESSAGE_SENT = 348;
+    MESSAGE_DELETED = 349;
+    AB_TEST_JOINED = 350;
+    DEEP_LINK_TAPPED = 351;
+    APP_CLOSED = 352;
+    SCROLLED_CHATS_SCREEN = 353;
+    SCROLLED_TALK_TO_SCREEN = 354;
+    SCROLLED_MESSAGES_SCREEN = 355;
+    LOADED_CHATS_SCREEN = 360;
+    LOADED_TALK_TO_SCREEN = 361;
+    LINK_WARNING_SHOWN_IGNORED = 362;
+    LINK_WARNING_SHOWN_ACCEPTED = 363;
+    LINK_STATUS_TIMEOUT = 364;
+    ADDRESS_BOOK_PROMPT = 365;
+}
+
+enum ClientPacketEventType {
+    MESSAGE_SENT_CONFIRMED = 300;
+    PUSH_RECEIVED = 301;
+}
+
+enum ClientMetricsSettingsUsedType {
+    PROFILE_PIC = 100;
+    NOTIFY_SOUND = 101;
+    NOTIFY_VIBRATION = 102;
+    NOTIFY_MESSAGE_PREVIEW = 103;
+    IGNORE_NEW_PEOPLE = 104;
+    TELL_SMS = 105;
+    TELL_EMAIL = 106;
+    TELL_SOCIAL = 107;
+    CHANGE_NAME = 108;
+    CHANGE_EMAIL = 109;
+    CHANGE_PASSWORD = 110;
+    RESET_KIK = 111;
+    ADDRESS_BOOK = 112;
+    BLOCK_LIST = 113;
+    BUBBLE_COLOR = 114;
+    ENTER_KEY_SEND = 115;
+    AUTO_ADD_ON_REPLY = 116;
+    HELP = 117;
+    UPDATE_KIK = 118;
+    LICENSES = 119;
+    PRIVACY_POLICY = 120;
+    DEVELOPER_MODE = 121;
+    TELL_OTHER = 122;
+    NOTIFY_LED_COLOR = 123;
+    NOTIFY_FOR_NEW_PEOPLE = 124;
+    AUTO_DOWNLOAD_VIDEOS = 125;
+}

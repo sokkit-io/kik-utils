@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package mobile.chats.v2;
+
+import "protobuf_validation.proto";
+import "common/v2/model.proto";
+
+option objc_class_prefix = "KPBMobileChatsV2";
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/chats/v2;chats";
+option java_package = "com.kik.gen.chats.v2";
+
+service ChatList {
+    rpc GetChatList(GetChatListRequest) returns (stream GetChatListResponse);
+    rpc RemoveOneToOneChat(RemoveOneToOneChatRequest) returns (RemoveOneToOneChatResponse);
+}
+
+message GetChatListRequest {
+    ChatListPageToken page_token = 1;
+}
+
+message GetChatListResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+    }
+    
+    repeated common.v2.ChatId chat_ids = 2;
+    ChatListPageToken page_token = 3;
+}
+
+message RemoveOneToOneChatRequest {
+    common.v2.ChatId chat_id = 1;
+}
+
+message RemoveOneToOneChatResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        INVALID_CHAT_ID = 1;
+    }
+}
+
+message ChatListPageToken {
+    bytes raw_value = 1;
+}

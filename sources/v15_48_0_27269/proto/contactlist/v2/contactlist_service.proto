@@ -1,0 +1,96 @@
+syntax = "proto3";
+
+package mobile.contactlist.v2;
+
+import "protobuf_validation.proto";
+import "common/v2/model.proto";
+import "contactlist/v2/contact_list_common.proto";
+import "persona/v2/persona_common.proto";
+
+option objc_class_prefix = "KPBMobileContactListV2";
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/contactlist/v2;contactlist";
+option java_package = "com.kik.gen.contactlist.v2";
+
+service ContactList {
+    rpc GetContactListStream(GetContactListStreamRequest) returns (stream GetContactListStreamResponse);
+    rpc CheckContactStatus(CheckContactStatusRequest) returns (CheckContactStatusResponse);
+    rpc AddContact(AddContactRequest) returns (AddContactResponse);
+    rpc RemoveContact(RemoveContactRequest) returns (RemoveContactResponse);
+}
+
+message GetContactListStreamRequest {
+    Kind response_kind = 1;
+    enum Kind {
+        PERSONA_ID = 0;
+        PERSONA_SHORT = 1;
+    }
+    
+    PageToken page_token = 2;
+}
+
+message GetContactListStreamResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+    }
+    
+    repeated ContactInfo contacts = 2;
+    message ContactInfo {
+        oneof persona_kind {
+            common.v2.PersonaId persona_id = 1;
+            common.persona.v2.PersonaShort persona_short = 2;
+        }
+    }
+    
+    PageToken page_token = 3;
+}
+
+message CheckContactStatusRequest {
+    repeated common.v2.PersonaId contacts_to_check = 1;
+}
+
+message CheckContactStatusResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+    }
+    
+    repeated ContactStatus succeeded_ids = 2;
+    message ContactStatus {
+        common.v2.PersonaId contacts_to_check = 1;
+        bool is_a_contact = 2;
+    }
+    
+    repeated common.v2.PersonaId failed_ids = 3;
+}
+
+message AddContactRequest {
+    common.v2.PersonaId new_contact = 1;
+    common.contactlist.v2.UserFriendContext friend_context = 2;
+}
+
+message AddContactResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        NOT_FOUND = 1;
+        NOT_PERMITTED = 2;
+    }
+    
+    common.v2.PersonaId added_contact = 2;
+}
+
+message PageToken {
+    bytes token = 1;
+}
+
+message RemoveContactRequest {
+    common.v2.PersonaId contact_to_remove = 1;
+}
+
+message RemoveContactResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+    }
+}
