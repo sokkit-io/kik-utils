@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package common.messagepath.v1;
+
+import "common_model.proto";
+import "common/v1/model.proto";
+import "protobuf_validation.proto";
+
+option objc_class_prefix = "MPTH";
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/messagepath/v1;messagepath";
+option java_package = "com.kik.messagepath.model";
+
+message VisibilityRulesAttachment {
+    XiBareUserJid initiator = 1 [deprecated = true];
+    common.v1.XiBareUserJidOrAliasJid initiator_v2 = 4;
+    bool drop_if_initiator_not_friend = 2;
+    
+    Rule rule = 3;
+    enum Rule {
+        USE_SENDER_FOR_VISIBILITY = 0;
+        USE_INITIATOR_FOR_VISIBILITY = 1;
+    }
+}

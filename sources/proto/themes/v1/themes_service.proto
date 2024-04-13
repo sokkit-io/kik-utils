@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package mobile.themes.v1;
+
+import "protobuf_validation.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/themes/v1;themes";
+option java_package = "com.kik.themes";
+
+service TopicThemes {
+    rpc ListTopicThemes(ListTopicThemesRequest) returns (ListTopicThemesResponse);
+}
+
+message ListTopicThemesRequest {
+    string page_token = 1;
+}
+
+message ListTopicThemesResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        ERROR = 1;
+    }
+    
+    repeated TopicTheme topic_themes = 2;
+    string next_page_token = 3;
+}
+
+message TopicTheme {
+    string theme_id = 1;
+    string background_url = 2;
+    string text_color = 3;
+    string placeholder_color = 4;
+}

@@ -1,0 +1,6 @@
+# IDE Configurations
+/.vscode/
+/.idea/
+
+# Source APKs
+/sources/apk/

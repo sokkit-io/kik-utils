@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package mobile.matching.v3;
+
+import "protobuf_validation.proto";
+import "google/protobuf/timestamp.proto";
+import "common_model.proto";
+import "common/v1/model.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/matching/v3;matching";
+option java_package = "com.kik.matching.rpc";
+
+service TopicsMatching {
+    rpc StartTopicChatSession(StartTopicChatSessionRequest) returns (StartTopicChatSessionResponse);
+    rpc EndTopicChatSession(EndTopicChatSessionRequest) returns (EndTopicChatSessionResponse);
+    rpc GetRemainingTopicChats(GetRemainingTopicChatsRequest) returns (GetRemainingTopicChatsResponse);
+}
+
+message StartTopicChatSessionRequest {
+    string topic_id = 1;
+}
+
+message StartTopicChatSessionResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        REJECTED = 1;
+        REJECTED_NO_REMAINING_SESSIONS = 2;
+        REJECTED_TEMPORARILY_BANNED = 3;
+        REJECTED_MAX_CONCURRENT_SESSIONS = 4;
+        ERROR = 5;
+        REJECTED_TOPIC_MAX_CONCURRENT_SESSIONS = 6;
+    }
+    
+    common.XiUuid session_id = 2;
+    google.protobuf.Timestamp rejected_expiry_time = 3;
+    google.protobuf.Timestamp session_end_time = 4;
+    common.v1.XiAliasJid chat_partner_alias = 5;
+    common.XiUuid request_id = 6;
+}
+
+message EndTopicChatSessionRequest {
+    common.XiUuid session_id = 1;
+}
+
+message EndTopicChatSessionResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        ERROR = 1;
+    }
+}
+
+message GetRemainingTopicChatsRequest {
+    
+}
+
+message GetRemainingTopicChatsResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+    }
+    
+    int32 remaining_chats = 2;
+}

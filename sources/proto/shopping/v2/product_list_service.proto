@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package mobile.shopping.v2;
+
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/shopping/v2;shopping";
+option java_package = "com.kik.shopping.rpc.v2";
+
+service ProductList {
+    rpc ListProductsByCategory(ProductsByCategoryRequest) returns (ProductsByCategoryResponse);
+}
+
+message TransactionType {
+    Value value = 1;
+    enum Value {
+        APP_LOVIN_REWARDED_VIDEO = 0;
+        GOOGLE_IAP = 1;
+        APPLE_IAP = 2;
+    }
+}
+
+message ProductsByCategoryRequest {
+    string product_category_id = 1;
+    string product_type = 2;
+    TransactionType transaction_type = 3;
+}
+
+message ProductsByCategoryResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        ERROR = 1;
+    }
+    
+    repeated Product products = 2;
+    string error_message = 3;
+}
+
+message Product {
+    string product_category_id = 1;
+    string product_id = 2;
+    string product_name = 3;
+    string context_data = 4;
+}

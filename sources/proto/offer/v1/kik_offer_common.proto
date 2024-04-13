@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+package common.offer.v1;
+
+import "protobuf_validation.proto";
+import "common_model.proto";
+import "google/protobuf/timestamp.proto";
+import "kin/payment/v1/payment_common.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/offer/v1;offer";
+option java_package = "com.kik.offer.model";
+
+message KikOfferId {
+    string id = 1;
+}
+
+message KikUserOfferId {
+    string id = 1;
+}
+
+message KikOfferIdOrUserOfferId {
+    oneof id {
+        KikOfferId kik_offer_id = 1;
+        KikUserOfferId kik_user_offer_id = 2;
+    }
+}
+
+message KikOffer {
+    KikOfferId kik_offer_id = 1;
+    KikUserOfferId kik_user_offer_id = 2;
+    FeatureGroup feature_group = 3;
+    kin.payment.v1.KinAmount amount = 4;
+    kin.payment.v1.TransactionType transaction_type = 5;
+    string title = 6;
+    string description = 7;
+    google.protobuf.Timestamp end_date = 8;
+    bool claim_silently = 9;
+    KikOfferData kik_offer_data = 10;
+}
+
+message UserOfferData {
+    oneof kind {
+        GroupTipping group_tipping_data = 1;
+    }
+}
+
+message GroupTipping {
+    XiGroupJid group_jid = 1;
+    MessageData message_data = 2;
+}
+
+message MessageData {
+    XiUuid id = 1;
+    
+    Type type = 2;
+    enum Type {
+        UNKNOWN = 0;
+        TEXT = 1;
+        WEB_PAGE = 2;
+        IMAGE_GALLERY = 3;
+        IMAGE_CAMERA = 4;
+        GIF = 5;
+        VIDEO_GALLERY = 6;
+        VIDEO_CAMERA = 7;
+    }
+}
+
+message KikOfferData {
+    oneof kind {
+        AnonMatchingBuyChatData anon_matching_buy_chat_data = 1;
+    }
+}
+
+message AnonMatchingBuyChatData {
+    uint32 number_of_chats = 1;
+}
+
+enum FeatureGroup {
+    UNKNOWN = 0;
+    GROUP_TIPPING = 1;
+    ANON_MATCHING = 2;
+    REWARDED_VIDEO = 3;
+    CLIENT_EARN = 4;
+}

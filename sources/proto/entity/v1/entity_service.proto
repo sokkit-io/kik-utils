@@ -1,0 +1,197 @@
+syntax = "proto3";
+
+package mobile.entity.v1;
+
+import "common_model.proto";
+import "protobuf_validation.proto";
+import "entity/v1/entity_common.proto";
+import "common/v1/model.proto";
+import "entity/v1/element_common.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/entity/v1;entity";
+option java_package = "com.kik.entity.mobile";
+
+service Entity {
+    rpc GetUsers(GetUsersRequest) returns (GetUsersResponse);
+    rpc GetBots(GetBotsRequest) returns (GetBotsResponse);
+    rpc GetGroups(GetGroupsRequest) returns (GetGroupsResponse);
+    rpc GetConvos(GetConvosRequest) returns (GetConvosResponse);
+    rpc GetUserRosterEntries(GetUserRosterEntriesRequest) returns (GetUserRosterEntriesResponse);
+    rpc GetGroupRosterEntries(GetGroupRosterEntriesRequest) returns (GetGroupRosterEntriesResponse);
+    rpc GetUsersByAlias(GetUsersByAliasRequest) returns (GetUsersByAliasResponse);
+    rpc GetTrustedBots(GetTrustedBotsRequest) returns (GetTrustedBotsResponse);
+}
+
+message GetUsersRequest {
+    repeated common.XiBareUserJid ids = 1;
+}
+
+message GetUsersResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        PARTIAL = 1;
+    }
+    
+    repeated common.entity.v1.EntityUser users = 10;
+    repeated common.XiBareUserJid retriable_ids = 11;
+    repeated common.XiBareUserJid failed_ids = 12;
+    repeated common.XiBareUserJid not_found_ids = 13;
+}
+
+message GetBotsRequest {
+    repeated common.XiBareUserJid ids = 1;
+}
+
+message GetBotsResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        PARTIAL = 1;
+    }
+    
+    repeated common.entity.v1.EntityBot bots = 10;
+    repeated common.XiBareUserJid retriable_ids = 11;
+    repeated common.XiBareUserJid failed_ids = 12;
+    repeated common.XiBareUserJid not_found_ids = 13;
+}
+
+message GetUserRosterEntriesRequest {
+    repeated common.XiBareUserJid ids = 1;
+}
+
+message GetUserRosterEntriesResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        PARTIAL = 1;
+    }
+    
+    repeated common.entity.v1.EntityUserRosterEntry user_roster_entries = 10;
+    repeated common.XiBareUserJid retriable_ids = 11;
+    repeated common.XiBareUserJid failed_ids = 12;
+    repeated common.XiBareUserJid not_found_ids = 13;
+}
+
+message GetGroupsRequest {
+    repeated common.XiGroupJid ids = 1;
+}
+
+message GetGroupsResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        PARTIAL = 1;
+    }
+    
+    repeated common.entity.v1.EntityGroup groups = 10;
+    repeated common.XiGroupJid retriable_ids = 11;
+    repeated common.XiGroupJid failed_ids = 12;
+    repeated common.XiGroupJid not_found_ids = 13;
+}
+
+message GetConvosRequest {
+    repeated common.v1.XiConvoId ids = 1;
+}
+
+message GetConvosResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        PARTIAL = 1;
+    }
+    
+    repeated common.entity.v1.EntityConvo convos = 10;
+    repeated common.v1.XiConvoId retriable_ids = 11;
+    repeated common.v1.XiConvoId failed_ids = 12;
+    repeated common.v1.XiConvoId not_found_ids = 13;
+}
+
+message GetTrustedBotsRequest {
+    PageToken page_token = 1;
+}
+
+message GetTrustedBotsResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+    }
+    
+    repeated common.XiBareUserJid trusted_bots = 2;
+    PageToken page_token = 3;
+}
+
+message PageToken {
+    bytes token = 1;
+}
+
+message GetGroupRosterEntriesRequest {
+    repeated common.XiGroupJid ids = 1;
+}
+
+message GetGroupRosterEntriesResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        PARTIAL = 1;
+    }
+    
+    repeated common.entity.v1.EntityGroupRosterEntry group_roster_entries = 10;
+    repeated common.XiGroupJid retriable_ids = 11;
+    repeated common.XiGroupJid failed_ids = 12;
+    repeated common.XiGroupJid not_found_ids = 13;
+}
+
+message RequestedJid {
+    oneof jid_type {
+        common.v1.XiAliasJid alias_jid = 1;
+    }
+}
+
+message GetUsersByAliasRequest {
+    repeated RequestedJid ids = 1;
+}
+
+message PublicGroupMemberProfile {
+    common.entity.v1.BioElement bio_element = 1;
+    common.entity.v1.ProfilePicElement profile_pic = 2;
+    common.entity.v1.BackgroundProfilePicExtensionElement background_profile_pic_extension = 3;
+    common.entity.v1.RegistrationElement registration_element = 4;
+    common.entity.v1.InterestsElement interests_element = 5;
+    common.entity.v1.EmojiStatusElement emoji_status_element = 6;
+    common.entity.v1.DisplayNameElement display_name = 7;
+    common.entity.v1.KinUserIdElement kin_user_id_element = 8;
+    common.entity.v1.UserTypeElement user_type_element = 9;
+}
+
+message AnonChatMemberProfile {
+    common.entity.v1.ProfilePicElement profile_pic = 2;
+    common.entity.v1.RegistrationElement registration_element = 4;
+    common.entity.v1.DisplayNameElement display_name = 7;
+}
+
+message PrivateProfile {
+    common.XiBareUserJid id = 1;
+    common.entity.v1.UsernameElement username = 2;
+}
+
+message GetUsersByAliasPayload {
+    PublicGroupMemberProfile public_group_member_profile = 1;
+    AnonChatMemberProfile anon_chat_member_profile = 5;
+    PrivateProfile private_profile = 2;
+    RequestedJid id = 3;
+    int32 request_index = 4;
+}
+
+message GetUsersByAliasResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        PARTIAL = 1;
+    }
+    
+    repeated GetUsersByAliasPayload payloads = 10;
+    repeated RequestedJid retriable_ids = 11;
+    repeated RequestedJid failed_ids = 12;
+    repeated RequestedJid not_found_ids = 13;
+}

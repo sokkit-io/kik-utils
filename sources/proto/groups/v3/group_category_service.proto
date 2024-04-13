@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+package mobile.groups.v3;
+
+import "common_model.proto";
+import "protobuf_validation.proto";
+import "groups/v1/groups_common.proto";
+import "groups/v2/groups_common.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/groups/v3;groups";
+option java_package = "com.kik.groups";
+
+service GroupCategories {
+    rpc ListCategories(ListCategoriesRequest) returns (ListCategoriesResponse);
+    rpc SetGroupCategory(SetGroupCategoryRequest) returns (SetGroupCategoryResponse);
+    rpc RemoveGroupCategory(RemoveGroupCategoryRequest) returns (RemoveGroupCategoryResponse);
+    rpc SearchGroups(SearchGroupsRequest) returns (SearchGroupsResponse);
+}
+
+message ListCategoriesRequest {
+    
+}
+
+message ListCategoriesResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        UNKNOWN = 10;
+    }
+    
+    repeated Category categories = 2;
+}
+
+message Category {
+    int32 id = 1;
+    string name = 2;
+    string background_color = 3;
+    string text_color = 4;
+    string image_url = 5;
+    int32 parent_id = 6;
+    repeated Category subcategories = 7;
+}
+
+message SetGroupCategoryRequest {
+    common.XiGroupJid jid = 1;
+    int32 category_id = 2;
+}
+
+message SetGroupCategoryResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        GROUP_NOT_FOUND = 1;
+        CATEGORY_NOT_FOUND = 2;
+        UNKNOWN = 10;
+    }
+}
+
+message RemoveGroupCategoryRequest {
+    common.XiGroupJid jid = 1;
+}
+
+message RemoveGroupCategoryResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        GROUP_NOT_FOUND = 1;
+        UNKNOWN = 10;
+    }
+}
+
+message SearchGroupsRequest {
+    int32 id = 1;
+    string page_token = 2;
+}
+
+message SearchGroupsResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        CATEGORY_NOT_FOUND = 1;
+        UNKNOWN = 10;
+    }
+    
+    repeated LimitedGroupInCategoryDetails groups = 2;
+    string next_page_token = 3;
+}
+
+message LimitedGroupInCategoryDetails {
+    common.XiGroupJid jid = 1;
+    common.groups.v1.GroupDisplayData display_data = 2;
+    uint32 member_count = 3;
+    google.protobuf.Timestamp last_activity_time = 4;
+    uint32 max_group_size = 5;
+    int32 category_id = 6;
+    common.groups.v2.PublicGroupJoinToken group_join_token = 100;
+}

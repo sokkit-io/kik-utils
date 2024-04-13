@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package common.accounts.v1;
+
+import "protobuf_validation.proto";
+
+option objc_class_prefix = "XIACC";
+option java_generate_equals_and_hash = true;
+option go_package = "github.com/kikinteractive/xiphias-model-common/generated/go/accounts/v1;accounts";
+option java_multiple_files = true;
+option java_outer_classname = "UserInfoSharedProto";
+option java_package = "com.kik.accounts.model";
+
+message DisplayNameComponents {
+    string first_name = 1;
+    string last_name = 2;
+}
+
+enum AccountStatus {
+    UNSET = 0;
+    DEACTIVATED_CONFIRMED = 10;
+    DEACTIVATED_UNCONFIRMED = 9;
+    UNCONFIRMED = 11;
+    CONFIRMED = 12;
+}
+
+enum UserType {
+    NORMAL = 0;
+    TEST = 1;
+    RAGEBOT = 2;
+}

@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package mobile.shopping.v1;
+
+import "protobuf_validation.proto";
+import "common/v2/model.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/shopping/v1;shopping";
+option java_package = "com.kik.shopping.rpc";
+
+service Purchase {
+    rpc PurchaseProduct(PurchaseProductRequest) returns (PurchaseProductResponse);
+    rpc PurchaseList(PurchaseListRequest) returns (PurchaseListResponse);
+}
+
+message PurchaseProductRequest {
+    string product_id = 1;
+    RewardedVideo rewarded_video = 2;
+    GoogleInAppPurchase google_iap = 3;
+    AppleInAppPurchase apple_iap = 4;
+    Aacadia aacadia = 5;
+}
+
+message RewardedVideo {
+    string event_id = 1;
+}
+
+message GoogleInAppPurchase {
+    string purchase_token = 1;
+}
+
+message AppleInAppPurchase {
+    string receipt_data = 1;
+    string transaction_id = 2;
+}
+
+message Aacadia {
+    string payment_token = 1;
+    common.v2.BigDecimal amount = 2;
+}
+
+message PurchaseProductResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        REJECTED = 1;
+    }
+    
+    RejectionReason rejection_reason = 2;
+    enum RejectionReason {
+        UNKNOWN = 0;
+        INVALID_PRODUCT_ID = 1;
+        TRANSACTION_NOT_VALID = 2;
+    }
+}
+
+message PurchaseListRequest {
+    Pagination pagination = 1;
+    enum Pagination {
+        LATEST = 0;
+        THREE_MONTHS = 1;
+        SIX_MONTHS = 2;
+    }
+}
+
+message PurchaseListResponse {
+    Result result = 1;
+    enum Result {
+        OK = 0;
+        REJECTED = 1;
+    }
+    
+    repeated PurchaseItem items = 2;
+    
+    RejectionReason rejection_reason = 3;
+    enum RejectionReason {
+        UNKNOWN = 0;
+        JID_NOT_VALID = 1;
+    }
+}
+
+message PurchaseItem {
+    int64 id = 1;
+    string user_jid = 2;
+    google.protobuf.Timestamp purchase_began = 3;
+    string purchase_status = 4;
+    string product_sku = 5;
+    common.v2.BigDecimal amount = 6;
+    string currency = 7;
+}

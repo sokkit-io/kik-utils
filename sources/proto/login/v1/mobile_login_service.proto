@@ -1,0 +1,116 @@
+syntax = "proto3";
+
+package mobile.login.v1;
+
+import "protobuf_validation.proto";
+import "common_model.proto";
+
+option go_package = "github.com/kikinteractive/xiphias-api-mobile/generated/go/login/v1;login";
+option java_package = "com.kik.login.rpc";
+
+service MobileLogin {
+    rpc Login(LoginRequest) returns (LoginResponse);
+    rpc Register(RegisterRequest) returns (RegisterResponse);
+}
+
+message RegisterRequest {
+    string first_name = 1;
+    string last_name = 2;
+    string username = 3;
+    string email = 4;
+    string email_derived_passkey = 5;
+    string username_derived_passkey = 6;
+    string birthday = 7;
+    common.XiDeviceId device_id = 8;
+    common.XiLocale locale = 9;
+    common.XiClientVersion version = 10;
+    string integrity_token = 13;
+    string recaptcha_token = 14;
+    
+    oneof MiscDeviceInfo {
+        AndroidInfo android_info = 11;
+        IosInfo ios_info = 12;
+    }
+}
+
+message RegisterResponse {
+    Result result = 1;
+    string session_token = 2;
+    string reason = 3;
+    map<string, string> ab_tests = 4;
+    string jid = 5;
+}
+
+message LoginRequest {
+    common.XiDeviceId device_id = 3;
+    common.XiLocale locale = 4;
+    common.XiClientVersion version = 5;
+    string integrity_token = 8;
+    string recaptcha_token = 9;
+    
+    oneof CredentialsType {
+        UsernameCredentials username_creds = 1;
+        EmailCredentials email_creds = 2;
+    }
+    
+    oneof MiscDeviceInfo {
+        AndroidInfo android_info = 6;
+        IosInfo ios_info = 7;
+    }
+}
+
+message LoginResponse {
+    Result result = 1;
+    string session_token = 2;
+    string reason = 3;
+    map<string, string> xdata_records = 4;
+    map<string, string> ab_tests = 5;
+    string jid = 6;
+    string username = 7;
+    string email = 8;
+}
+
+message UsernameCredentials {
+    string username = 1;
+    string username_derived_passkey = 2;
+}
+
+message EmailCredentials {
+    string email = 1;
+    string email_derived_passkey = 2;
+}
+
+message AndroidInfo {
+    string brand = 1;
+    string operator = 2;
+    string android_sdk = 3;
+    string android_id = 4;
+    string logins_since_install = 5;
+    string registration_since_install = 6;
+    string install_date = 7;
+    string install_referrer = 8;
+}
+
+message IosInfo {
+    string system_version = 1;
+    string iphone_idfv = 2;
+    string enterprise = 3;
+    string country_code = 4;
+}
+
+enum Result {
+    OK = 0;
+    SERVER_ERROR = 1;
+    INVALID = 2;
+    SERVICE_UNAVAILABLE = 3;
+    NAME_REJECTED = 4;
+    USERNAME_REJECTED = 5;
+    EMAIL_REJECTED = 6;
+    BIRTHDAY_REJECTED = 7;
+    ALREADY_REGISTERED = 8;
+    USERNAME_EXISTS = 9;
+    VERIFICATION_FAILED = 10;
+    NOT_REGISTERED = 11;
+    INVALID_PASSWORD = 12;
+    ACCT_TERMINATED = 13;
+}
